@@ -1,4 +1,4 @@
-`use strict`;
+'use strict';
 
 const TRIP_POINTS_COUNT = 3;
 
@@ -277,6 +277,7 @@ const createAddEventDestinationTemplate = () => {
   );
 };
 
+/* редактирование, пока не используется
 const createEditEventTemplate = () => {
   return (
     `<form class="event  event--edit" action="#" method="post">
@@ -452,6 +453,7 @@ const createEditEventTemplate = () => {
     </form>`
   );
 };
+*/
 
 const createDaysListTemplate = () => {
   return (
