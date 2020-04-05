@@ -516,3 +516,41 @@ const createPointTemplate = () => {
     </li>`
   );
 };
+
+const renderElement = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+// Отрисовка стоимости и информации о маршруте
+const tripMainElement = document.querySelector('.trip-main');
+const tripMainControlsElement = tripMainElement.querySelector('.trip-main__trip-controls');
+renderElement(tripMainElement, createTripCostTemplate(), 'afterbegin');
+const tripInfoElement = tripMainElement.querySelector('.trip-main__trip-info');
+renderElement(tripInfoElement, createTripInfoTemplate(), 'afterbegin');
+
+// Отрисовка меню и фильтрации
+renderElement(tripMainControlsElement.querySelector('h2:nth-of-type(1)'), createMenuTemplate(), 'afterend');
+renderElement(tripMainControlsElement.querySelector('h2:nth-of-type(2)'), createFilterTemplate(), 'afterend');
+
+// Отрисовка основной части с сортировкой
+const tripEventsElement = document.querySelector('.trip-events');
+renderElement(tripEventsElement, createSortTemplate(), 'beforeend');
+
+// Отрисовка формы создания точки
+renderElement(tripEventsElement, createAddEventHeaderTemplate(), 'beforeend');
+const tripEventsItemElement = tripEventsElement.querySelector('.trip-events__item');
+renderElement(tripEventsItemElement, createAddEventDetailsTemplate(), 'beforeend');
+renderElement(tripEventsItemElement.querySelector('.event__details'), createAddEventDestinationTemplate(), 'beforeend');
+
+// Отрисовка списка дней
+renderElement(tripEventsElement, createDaysListTemplate(), 'beforeend');
+const tripDaysListElement = tripEventsElement.querySelector('.trip-days');
+renderElement(tripDaysListElement, createDayTemplate(), 'beforeend');
+
+// Отрисовка точек маршрута
+const tripDayElementElement = tripDaysListElement.querySelector('.trip-days__item');
+renderElement(tripDayElementElement, createPointsListTemplate(), 'beforeend');
+const tripPointsListElement = tripDayElementElement.querySelector('.trip-events__list');
+for (let point = 0; point < TRIP_POINTS_COUNT; point++) {
+  renderElement(tripPointsListElement, createPointTemplate(), 'beforeend');
+}
