@@ -1,4 +1,4 @@
-import {formatTime} from "../utils.js";
+import {formatTime, formatDuration} from "../utils.js";
 
 const createOfferMarkup = (offer) => {
   const {name, price} = offer;
@@ -24,13 +24,13 @@ export const createEventTemplate = () => {
   const type = `taxi`;
   const destionation = `Amsterdam`;
   const dateStart = new Date(`2019-03-18T10:30`);
-  const dateEnd = new Date(`2019-03-18T11:00`);
+  const dateEnd = new Date(`2019-03-19T11:00`);
   const cost = 20;
   const offers = [{name: `Order Uber`, price: 20}, {name: `Rent a car`, price: 200}];
 
   const timeStart = formatTime(dateStart);
   const timeEnd = formatTime(dateEnd);
-  const duration = (dateEnd.getDate() - dateStart.getDate());
+  const duration = formatDuration(new Date(dateEnd - dateStart));
   const offersList = offers ? createOffersTemplate(offers) : ``;
 
   return (

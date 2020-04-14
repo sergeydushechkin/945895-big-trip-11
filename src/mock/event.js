@@ -1,7 +1,7 @@
 const eventTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
 const cities = [`Amsterdam`, `Chamonix`, `Geneva`];
 const destionations = {
-  name:cities[0],
+  name: cities[0],
   photos: `http://picsum.photos/248/152?r=${Math.random()}`,
 };
 const placeholderTexts = [`Flight to`, `Taxi to`, `Sightseeing in`, `Restaurant in`];

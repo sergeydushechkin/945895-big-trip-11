@@ -13,3 +13,22 @@ export const formatTime = (date) => {
 
   return `${hours}:${minutes}`;
 };
+
+const formatDurationTime = (date) => {
+  const hours = castTimeFormat(date.getUTCHours());
+  const minutes = castTimeFormat(date.getUTCMinutes());
+
+  return `${hours}H ${minutes}M`;
+};
+
+export const formatDuration = (date) => {
+  let duration = ``;
+  if (date >= 86400000) {
+    duration = `${castTimeFormat(Math.floor(date / 1000 / 60 / 60 / 24))}D ${formatDurationTime(date)}`;
+  } else if (date >= 3600000) {
+    duration = `${formatDurationTime(date)}`;
+  } else {
+    duration = `${date / 1000 / 60}M`;
+  }
+  return duration;
+};
