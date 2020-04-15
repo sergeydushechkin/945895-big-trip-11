@@ -1,4 +1,6 @@
 import {formatTime, formatDuration} from "../utils.js";
+import {EVENT_TYPES, EVENT_PREP} from "../const.js";
+import {destinations} from "../mock/event.js";
 
 const createOfferMarkup = (offer) => {
   const {name, price} = offer;
@@ -22,10 +24,10 @@ const createOffersTemplate = (offers) => {
 
 export const createEventTemplate = () => {
   const type = `taxi`;
-  const destionation = `Amsterdam`;
+  const destination = `Amsterdam`;
   const dateStart = new Date(`2019-03-18T10:30`);
   const dateEnd = new Date(`2019-03-19T11:00`);
-  const cost = 20;
+  const price = 20;
   const offers = [{name: `Order Uber`, price: 20}, {name: `Rent a car`, price: 200}];
 
   const timeStart = formatTime(dateStart);
@@ -39,7 +41,7 @@ export const createEventTemplate = () => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destionation}</h3>
+        <h3 class="event__title">${type} ${EVENT_PREP[type]} ${destination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
@@ -51,7 +53,7 @@ export const createEventTemplate = () => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${cost}</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
