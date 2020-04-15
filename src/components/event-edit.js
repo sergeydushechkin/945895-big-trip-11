@@ -2,40 +2,44 @@ import {EVENT_TYPES, EVENT_PREP} from "../const.js";
 import {destinations} from "../mock/event.js";
 import {formatTime, formatFullDate, formatDuration} from "../utils.js";
 
+const createEventEditPhotosMarkup = (photos) => {
+  const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
+  return (
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${photosElements}
+      </div>
+    </div>`
+  );
+};
+
 const createEventEditDestinationsMarkup = (destination) => {
   const {description, photos} = destination;
-  return (`
-    <section class="event__section  event__section--destination">
+  const photosMarkup = photos.length ? createEventEditPhotosMarkup(photos) : ``;
+  return (
+    `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${description}</p>
 
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-          <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-        </div>
-      </div>
-    </section>
-  `);
+      ${photosMarkup}
+    </section>`
+  );
 };
 
 const createEventEditOffersMarkup = (offers) => {
   return offers.map((offer) => {
     const {name, type, price, checked} = offer;
     const checkStatus = checked ? `checked` : ``;
-    return (`
-      <div class="event__offer-selector">
+    return (
+      `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}" ${checkStatus}>
         <label class="event__offer-label" for="event-offer-${type}-1">
           <span class="event__offer-title">${name}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${price}</span>
         </label>
-      </div>
-    `);
+      </div>`
+    );
   })
   .join(`\n`);
 };
@@ -43,8 +47,8 @@ const createEventEditOffersMarkup = (offers) => {
 const createEventEditDetailsMarkup = (event) => {
   const eventOffersMarkup = createEventEditOffersMarkup(event.offers);
   const eventDestinationsMarkup = createEventEditDestinationsMarkup(event);
-  return (`
-    <section class="event__details">
+  return (
+    `<section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
@@ -54,15 +58,15 @@ const createEventEditDetailsMarkup = (event) => {
       </section>
 
       ${eventDestinationsMarkup}
-    </section>
-  `);
+    </section>`
+  );
 };
 
-const createDestionationsMarkup = (destinationsNames) => {
+const createDestionationsListMarkup = (destinationsNames) => {
   return destinationsNames.map((destination) => `<option value="${destination}"></option>`).join(`\n`);
 };
 
-export const createEventEditTemplate = () => {
+export const createEventEditTemplate = (event) => {
   const type = `flight`;
   const destination = `Geneva`;
   const dateStart = new Date(`18/03/19 00:00`);
@@ -73,9 +77,9 @@ export const createEventEditTemplate = () => {
 
   const eventDateStart = formatFullDate(dateStart);
   const eventDateEnd = formatFullDate(dateEnd);
-  const destinationList = createDestionationsMarkup(destinations);
+  const destinationList = createDestionationsListMarkup(destinations);
   const favorite = isFavorite ? `checked` : ``;
-  const eventDetailsMarkup = createEventEditDetailsMarkup();
+  const eventDetailsMarkup = createEventEditDetailsMarkup(event);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

@@ -22,7 +22,7 @@ const createOffersTemplate = (offers) => {
   );
 };
 
-export const createEventTemplate = () => {
+export const createEventTemplate = (event) => {
   const type = `taxi`;
   const destination = `Amsterdam`;
   const dateStart = new Date(`2019-03-18T10:30`);
