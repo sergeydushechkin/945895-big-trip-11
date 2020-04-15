@@ -1,9 +1,11 @@
-const eventTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check`, `Sightseeing`, `Restaurant`];
 const cities = [`Amsterdam`, `Chamonix`, `Geneva`];
-const destionations = {
-  name: cities[0],
-  photos: `http://picsum.photos/248/152?r=${Math.random()}`,
-};
+const destionations = [
+  {
+    name: cities[0],
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+    photos: `http://picsum.photos/248/152?r=${Math.random()}`,
+  }
+];
 const placeholderTexts = [`Flight to`, `Taxi to`, `Sightseeing in`, `Restaurant in`];
 const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -23,37 +25,69 @@ const event = {
   destintaion: ``,
   dateStart: ``,
   dateEnd: ``,
-  cost: 1000,
+  price: 1000,
   offers: []
 };
 
 const offers = [
   {
     name: `Order Uber`,
-    price: 20
+    type: `uber`,
+    price: 20,
+    checked: false
   },
   {
     name: `Add luggage`,
-    price: 50
+    type: `luggage`,
+    price: 50,
+    checked: false
   },
   {
-    name: `Switch to comfort`,
-    price: 80
+    name: `Switch to comfort class`,
+    type: `comfort`,
+    price: 80,
+    checked: false
   },
   {
     name: `Rent a car`,
-    price: 200
+    type: `car`,
+    price: 200,
+    checked: false
   },
   {
     name: `Add breakfast`,
-    price: 50
+    type: `breakfast`,
+    price: 50,
+    checked: false
   },
   {
     name: `Book tickets`,
-    price: 40
+    type: `tickets`,
+    price: 40,
+    checked: false
   },
   {
     name: `Lunch in city`,
-    price: 30
+    type: `lunch`,
+    price: 30,
+    checked: false
+  },
+  {
+    name: `Add meal`,
+    type: `meal`,
+    price: 15,
+    checked: false
+  },
+  {
+    name: `Choose seats`,
+    type: `seats`,
+    price: 5,
+    checked: false
+  },
+  {
+    name: `Travel by train`,
+    type: `train`,
+    price: 40,
+    checked: false
   },
 ];
