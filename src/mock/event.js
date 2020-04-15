@@ -91,3 +91,31 @@ const offers = [
     checked: false
   },
 ];
+
+export const generateEvents = () => {
+  return [{
+    type: `taxi`,
+    destintaion: {
+      name: `Amsterdam`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+      photos: `http://picsum.photos/248/152?r=1`
+    },
+    dateStart: new Date(`2019-03-18T10:30`),
+    dateEnd: new Date(`2019-03-18T11:00`),
+    price: 1000,
+    offers: [
+      {
+        name: `Add breakfast`,
+        type: `breakfast`,
+        price: 50,
+        checked: false
+      },
+      {
+        name: `Book tickets`,
+        type: `tickets`,
+        price: 40,
+        checked: false
+      }
+    ]
+  }];
+};
