@@ -14,6 +14,16 @@ export const formatTime = (date) => {
   return `${hours}:${minutes}`;
 };
 
+export const formatFullDate = (date) => {
+  const day = castTimeFormat(date.getDate());
+  const month = castTimeFormat(date.getMonth() + 1);
+  const year = date.getYear();
+  const hours = castTimeFormat(date.getHours());
+  const minutes = castTimeFormat(date.getMinutes());
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
 const formatDurationTime = (date) => {
   const hours = castTimeFormat(date.getUTCHours());
   const minutes = castTimeFormat(date.getUTCMinutes());
