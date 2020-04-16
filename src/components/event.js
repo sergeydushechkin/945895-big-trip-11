@@ -13,7 +13,7 @@ const createOfferMarkup = (offer) => {
 };
 
 const createOffersTemplate = (offers) => {
-  const offersMarkup = offers.map((offer) => createOfferMarkup(offer)).join(`\n`);
+  const offersMarkup = offers.map((offer) => offer.checked ? createOfferMarkup(offer) : ``).join(`\n`);
   return (
     `<ul class="event__selected-offers">
       ${offersMarkup}

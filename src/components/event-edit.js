@@ -1,5 +1,4 @@
 import {EVENT_PREP} from "../const.js";
-import {destionations} from "../mock/event.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils.js";
 
 const createEventEditPhotosMarkup = (photos) => {
@@ -62,17 +61,17 @@ const createEventEditDetailsMarkup = (event) => {
   );
 };
 
-const createDestionationsListMarkup = () => {
+const createDestionationsListMarkup = (destionations) => {
   return destionations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
-export const createEventEditTemplate = (event) => {
+export const createEventEditTemplate = (event, destionations) => {
   const {type, destination, dateStart, dateEnd, price, isFavorite} = event;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(dateStart);
   const eventDateEnd = formatFullDate(dateEnd);
-  const destinationList = createDestionationsListMarkup();
+  const destinationList = createDestionationsListMarkup(destionations);
   const favorite = isFavorite ? `checked` : ``;
   const eventDetailsMarkup = createEventEditDetailsMarkup(event);
 
