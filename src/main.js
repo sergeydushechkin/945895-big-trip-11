@@ -35,7 +35,7 @@ renderElement(tripEventsElement, createEventEditTemplate(events[0]), `beforeend`
 // Отрисовка списка дней
 renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
-renderElement(tripDaysListElement, createDayTemplate(), `beforeend`);
+renderElement(tripDaysListElement, createDayTemplate(events[0].dateStart, 1), `beforeend`);
 
 // Отрисовка точек маршрута
 const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);

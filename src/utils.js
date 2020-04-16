@@ -24,6 +24,13 @@ export const formatFullDate = (date) => {
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
+export const formatDateReverse = (date) => {
+  const day = castTimeFormat(date.getDate());
+  const month = castTimeFormat(date.getMonth() + 1);
+  const year = date.getFullYear();
+  return `${year}-${month}-${day}`;
+};
+
 const formatDurationTime = (date) => {
   const hours = castTimeFormat(date.getUTCHours());
   const minutes = castTimeFormat(date.getUTCMinutes());
