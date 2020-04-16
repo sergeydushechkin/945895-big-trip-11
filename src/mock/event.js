@@ -75,7 +75,7 @@ const getRandomDate = () => {
 };
 
 const generateEventOffers = () => {
-  let resultOffers = offers.slice();
+  let resultOffers = offers.map((offer) => Object.assign({}, offer));
   for (let i = 0; i < getRandomIntegerNumber(0, 5); i++) {
     resultOffers[getRandomIntegerNumber(0, resultOffers.length - 1)].checked = true;
   }
