@@ -1,9 +1,19 @@
-const cities = [`Amsterdam`, `Chamonix`, `Geneva`];
-const destionations = [
+export const cities = [`Amsterdam`, `Chamonix`, `Geneva`];
+export const destionations = [
   {
-    name: cities[0],
+    name: `Amsterdam`,
     description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    photos: `http://picsum.photos/248/152?r=${Math.random()}`,
+    photos: `http://picsum.photos/248/152?r=1`,
+  },
+  {
+    name: `Chamonix`,
+    description: `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
+    photos: `http://picsum.photos/248/152?r=2`,
+  },
+  {
+    name: `Geneva`,
+    description: `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
+    photos: `http://picsum.photos/248/152?r=3`,
   }
 ];
 const placeholderTexts = [`Flight to`, `Taxi to`, `Sightseeing in`, `Restaurant in`];
@@ -15,19 +25,20 @@ const descriptions = [
   `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
   `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
   `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis.`, `Aliquam erat volutpat.`,
+  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
+  `Aliquam erat volutpat.`,
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const event = {
-  type: eventTypes[0],
-  destintaion: ``,
-  dateStart: ``,
-  dateEnd: ``,
-  price: 1000,
-  offers: []
-};
+// const event = {
+//   type: eventTypes[0],
+//   destintaion: ``,
+//   dateStart: ``,
+//   dateEnd: ``,
+//   price: 1000,
+//   offers: []
+// };
 
 const offers = [
   {
@@ -95,10 +106,10 @@ const offers = [
 export const generateEvents = () => {
   return [{
     type: `taxi`,
-    destintaion: {
+    destination: {
       name: `Amsterdam`,
-      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-      photos: `http://picsum.photos/248/152?r=1`
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
+      photos: [`http://picsum.photos/248/152?r=1`]
     },
     dateStart: new Date(`2019-03-18T10:30`),
     dateEnd: new Date(`2019-03-18T11:00`),
@@ -116,6 +127,7 @@ export const generateEvents = () => {
         price: 40,
         checked: false
       }
-    ]
+    ],
+    isFavorite: true
   }];
 };

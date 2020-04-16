@@ -30,7 +30,7 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 renderElement(tripEventsElement, createSortTemplate(), `beforeend`);
 
 // Отрисовка формы создания точки
-renderElement(tripEventsElement, createEventEditTemplate(events), `beforeend`);
+renderElement(tripEventsElement, createEventEditTemplate(events[0]), `beforeend`);
 
 // Отрисовка списка дней
 renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
@@ -39,6 +39,6 @@ renderElement(tripDaysListElement, createDayTemplate(), `beforeend`);
 
 // Отрисовка точек маршрута
 const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
-for (let point = 0; events.length; point++) {
-  renderElement(tripPointsListElement, createEventTemplate(events), `beforeend`);
+for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
+  renderElement(tripPointsListElement, createEventTemplate(events[eventIndex]), `beforeend`);
 }
