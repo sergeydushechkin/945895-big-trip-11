@@ -17,7 +17,7 @@ export const formatTime = (date) => {
 export const formatFullDate = (date) => {
   const day = castTimeFormat(date.getDate());
   const month = castTimeFormat(date.getMonth() + 1);
-  const year = date.getYear();
+  const year = String(date.getFullYear()).slice(2);
   const hours = castTimeFormat(date.getHours());
   const minutes = castTimeFormat(date.getMinutes());
 
@@ -42,3 +42,6 @@ export const formatDuration = (date) => {
   }
   return duration;
 };
+
+export const capitalizeFirstLetter = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
