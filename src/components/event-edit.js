@@ -1,6 +1,6 @@
-import {EVENT_TYPES, EVENT_PREP} from "../const.js";
-import {destinations} from "../mock/event.js";
-import {formatTime, formatFullDate, formatDuration} from "../utils.js";
+import {EVENT_PREP} from "../const.js";
+import {destionations} from "../mock/event.js";
+import {formatFullDate, capitalizeFirstLetter} from "../utils.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -46,7 +46,7 @@ const createEventEditOffersMarkup = (offers) => {
 
 const createEventEditDetailsMarkup = (event) => {
   const eventOffersMarkup = createEventEditOffersMarkup(event.offers);
-  const eventDestinationsMarkup = createEventEditDestinationsMarkup(event);
+  const eventDestinationsMarkup = createEventEditDestinationsMarkup(event.destination);
   return (
     `<section class="event__details">
       <section class="event__section  event__section--offers">
@@ -62,22 +62,17 @@ const createEventEditDetailsMarkup = (event) => {
   );
 };
 
-const createDestionationsListMarkup = (destinationsNames) => {
-  return destinationsNames.map((destination) => `<option value="${destination}"></option>`).join(`\n`);
+const createDestionationsListMarkup = () => {
+  return destionations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
 export const createEventEditTemplate = (event) => {
-  const type = `flight`;
-  const destination = `Geneva`;
-  const dateStart = new Date(`18/03/19 00:00`);
-  const dateEnd = new Date(`18/03/19 00:00`);
-  const price = 20;
-  const offers = [{name: `Order Uber`, price: 20}, {name: `Rent a car`, price: 200}];
-  const isFavorite = true;
+  const {type, destination, dateStart, dateEnd, price, isFavorite} = event;
 
+  const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(dateStart);
   const eventDateEnd = formatFullDate(dateEnd);
-  const destinationList = createDestionationsListMarkup(destinations);
+  const destinationList = createDestionationsListMarkup();
   const favorite = isFavorite ? `checked` : ``;
   const eventDetailsMarkup = createEventEditDetailsMarkup(event);
 
@@ -154,9 +149,9 @@ export const createEventEditTemplate = (event) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            ${type} ${EVENT_PREP[type]}
+            ${eventTypeName} ${EVENT_PREP[type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${destinationList}
           </datalist>

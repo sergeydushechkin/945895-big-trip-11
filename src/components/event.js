@@ -1,6 +1,5 @@
-import {formatTime, formatDuration} from "../utils.js";
-import {EVENT_TYPES, EVENT_PREP} from "../const.js";
-import {destinations} from "../mock/event.js";
+import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils.js";
+import {EVENT_PREP} from "../const.js";
 
 const createOfferMarkup = (offer) => {
   const {name, price} = offer;
@@ -23,17 +22,13 @@ const createOffersTemplate = (offers) => {
 };
 
 export const createEventTemplate = (event) => {
-  const type = `taxi`;
-  const destination = `Amsterdam`;
-  const dateStart = new Date(`2019-03-18T10:30`);
-  const dateEnd = new Date(`2019-03-19T11:00`);
-  const price = 20;
-  const offers = [{name: `Order Uber`, price: 20}, {name: `Rent a car`, price: 200}];
+  const {type, destination, dateStart, dateEnd, price, offers} = event;
 
+  const eventTypeName = capitalizeFirstLetter(type);
+  const offersList = offers ? createOffersTemplate(offers) : ``;
+  const duration = formatDuration(new Date(dateEnd - dateStart));
   const timeStart = formatTime(dateStart);
   const timeEnd = formatTime(dateEnd);
-  const duration = formatDuration(new Date(dateEnd - dateStart));
-  const offersList = offers ? createOffersTemplate(offers) : ``;
 
   return (
     `<li class="trip-events__item">
@@ -41,7 +36,7 @@ export const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${EVENT_PREP[type]} ${destination}</h3>
+        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
