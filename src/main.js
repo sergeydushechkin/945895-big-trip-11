@@ -7,13 +7,16 @@ import {createDaysListTemplate} from "./components/days-list.js";
 import {createDayTemplate} from "./components/day.js";
 import {createEventTemplate} from "./components/event.js";
 import {createEventEditTemplate} from "./components/event-edit.js";
-import {generateEvents} from "./mock/event.js";
+import {generateEvents, getDestinations} from "./mock/event.js";
+
+const EVENTS_COUNT = 20;
 
 const renderElement = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const events = generateEvents();
+const destinationList = getDestinations();
+const events = generateEvents(EVENTS_COUNT, destinationList);
 
 // Отрисовка стоимости и информации о маршруте
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -29,15 +32,15 @@ renderElement(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), create
 const tripEventsElement = document.querySelector(`.trip-events`);
 renderElement(tripEventsElement, createSortTemplate(), `beforeend`);
 
-// Отрисовка формы создания точки
-renderElement(tripEventsElement, createEventEditTemplate(events[0]), `beforeend`);
+// Отрисовка формы создания события
+renderElement(tripEventsElement, createEventEditTemplate(events[0], destinationList), `beforeend`);
 
 // Отрисовка списка дней
 renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 renderElement(tripDaysListElement, createDayTemplate(events[0].dateStart, 1), `beforeend`);
 
-// Отрисовка точек маршрута
+// Отрисовка событий маршрута
 const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
 for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
   renderElement(tripPointsListElement, createEventTemplate(events[eventIndex]), `beforeend`);

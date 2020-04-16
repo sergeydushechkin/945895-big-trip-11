@@ -1,22 +1,8 @@
-export const cities = [`Amsterdam`, `Chamonix`, `Geneva`];
-export const destionations = [
-  {
-    name: `Amsterdam`,
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-    photos: `http://picsum.photos/248/152?r=1`,
-  },
-  {
-    name: `Chamonix`,
-    description: `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-    photos: `http://picsum.photos/248/152?r=2`,
-  },
-  {
-    name: `Geneva`,
-    description: `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.`,
-    photos: `http://picsum.photos/248/152?r=3`,
-  }
-];
-const placeholderTexts = [`Flight to`, `Taxi to`, `Sightseeing in`, `Restaurant in`];
+import {EVENT_TYPES} from "../const.js";
+import {getRandomArrayElement, getRandomIntegerNumber} from "../utils.js";
+
+export const cities = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `London`];
+
 const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
@@ -30,15 +16,6 @@ const descriptions = [
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
 ];
-
-// const event = {
-//   type: eventTypes[0],
-//   destintaion: ``,
-//   dateStart: ``,
-//   dateEnd: ``,
-//   price: 1000,
-//   offers: []
-// };
 
 const offers = [
   {
@@ -70,64 +47,60 @@ const offers = [
     type: `breakfast`,
     price: 50,
     checked: false
-  },
-  {
-    name: `Book tickets`,
-    type: `tickets`,
-    price: 40,
-    checked: false
-  },
-  {
-    name: `Lunch in city`,
-    type: `lunch`,
-    price: 30,
-    checked: false
-  },
-  {
-    name: `Add meal`,
-    type: `meal`,
-    price: 15,
-    checked: false
-  },
-  {
-    name: `Choose seats`,
-    type: `seats`,
-    price: 5,
-    checked: false
-  },
-  {
-    name: `Travel by train`,
-    type: `train`,
-    price: 40,
-    checked: false
-  },
+  }
 ];
 
-export const generateEvents = () => {
-  return [{
-    type: `taxi`,
-    destination: {
-      name: `Amsterdam`,
-      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
-      photos: [`http://picsum.photos/248/152?r=1`]
-    },
-    dateStart: new Date(`2019-03-18T10:30`),
-    dateEnd: new Date(`2019-03-18T11:00`),
-    price: 1000,
-    offers: [
-      {
-        name: `Add breakfast`,
-        type: `breakfast`,
-        price: 50,
-        checked: false
-      },
-      {
-        name: `Book tickets`,
-        type: `tickets`,
-        price: 40,
-        checked: false
-      }
-    ],
-    isFavorite: true
-  }];
+export const getDestinations = () => {
+  return cities.map((city) => {
+    let description = ``;
+    for (let i = 0; i < getRandomIntegerNumber(1, 5); i++) {
+      description = `${description} ${getRandomArrayElement(descriptions)}`;
+    }
+
+    let photos = [];
+    for (let i = 0; i < getRandomIntegerNumber(1, 5); i++) {
+      photos.push(`http://picsum.photos/248/152?r=${getRandomIntegerNumber(1, 50)}`);
+    }
+
+    return {
+      name: city,
+      description,
+      photos
+    };
+  });
+};
+
+const getRandomDate = () => {
+  return Date.now() + getRandomIntegerNumber(2, 10) * (1000 * getRandomIntegerNumber(30, 60) * 60 * 24);
+};
+
+const generateEventOffers = () => {
+  let resultOffers = offers.slice();
+  for (let i = 0; i < getRandomIntegerNumber(0, 5); i++) {
+    resultOffers[getRandomIntegerNumber(0, resultOffers.length - 1)].checked = true;
+  }
+
+  return resultOffers;
+};
+
+const generateEvent = (destinationsList) => {
+  const dateFirst = getRandomDate();
+  const dateSecond = getRandomDate();
+
+  const dateStart = new Date(Math.min(dateFirst, dateSecond));
+  const dateEnd = new Date(Math.max(dateFirst, dateSecond));
+
+  return {
+    type: getRandomArrayElement(EVENT_TYPES),
+    destination: getRandomArrayElement(destinationsList),
+    dateStart,
+    dateEnd,
+    price: getRandomIntegerNumber(500, 3000),
+    offers: generateEventOffers(),
+    isFavorite: Math.random() > 0.5
+  };
+};
+
+export const generateEvents = (count, destinationsList) => {
+  return new Array(count).fill(``).map(() => generateEvent(destinationsList));
 };
