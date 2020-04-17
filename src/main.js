@@ -8,8 +8,9 @@ import {createDayTemplate} from "./components/day.js";
 import {createEventTemplate} from "./components/event.js";
 import {createEventEditTemplate} from "./components/event-edit.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
+import {createElement, formatDateReverse} from "./utils.js";
 
-const EVENTS_COUNT = 20;
+const EVENTS_COUNT = 10;
 
 const renderElement = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -17,6 +18,8 @@ const renderElement = (container, template, place) => {
 
 const destinationList = getDestinations();
 const events = generateEvents(EVENTS_COUNT, destinationList);
+
+const eventsDates = new Set(events.map((date) => formatDateReverse(date.dateStart)));
 
 // Отрисовка стоимости и информации о маршруте
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -40,8 +43,27 @@ renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 renderElement(tripDaysListElement, createDayTemplate(events[0].dateStart, 1), `beforeend`);
 
+renderElement(
+    tripDaysListElement,
+    Array.from(eventsDates).sort().map((dayDate, dayIndex) => {
+      const dayElement = createElement(createDayTemplate(new Date(dayDate), dayIndex));
+
+      renderElement(
+          dayElement.querySelector(`.trip-events__list`),
+          events.filter((event) => formatDateReverse(event.dateStart) === dayDate)
+            .sort((a, b) => a.dateStart > b.dateStart)
+            .map((event) => createEventTemplate(event))
+            .join(`\n`),
+          `beforeend`
+      );
+
+      return dayElement.innerHTML;
+    })
+    .join(`\n`),
+    `beforeend`
+);
 // Отрисовка событий маршрута
-const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
-for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
-  renderElement(tripPointsListElement, createEventTemplate(events[eventIndex]), `beforeend`);
-}
+// const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
+// for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
+//   renderElement(tripPointsListElement, createEventTemplate(events[eventIndex]), `beforeend`);
+// }

@@ -52,3 +52,9 @@ export const formatDuration = (date) => {
 
 export const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const createElement = (elementTemplate) => {
+  const tempElement = document.createElement(`div`);
+  tempElement.innerHTML = elementTemplate;
+  return tempElement.firstChild;
+};
