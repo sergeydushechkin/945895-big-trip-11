@@ -70,8 +70,15 @@ export const getDestinations = () => {
   });
 };
 
-const getRandomDate = () => {
-  return Date.now() + getRandomIntegerNumber(2, 10) * (1000 * getRandomIntegerNumber(30, 60) * 60 * 24);
+const getRandomDate = (baseDate) => {
+  let randomDate;
+  if (baseDate) {
+    randomDate = baseDate + Math.round((60 * 60 * getRandomIntegerNumber(0.4, 10) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
+  } else {
+    randomDate = Date.now() + Math.round((60 * 60 * getRandomIntegerNumber(1, 24) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
+  }
+
+  return randomDate;
 };
 
 const generateEventOffers = () => {
@@ -83,10 +90,7 @@ const generateEventOffers = () => {
   return resultOffers;
 };
 
-const generateEvent = (destinationsList) => {
-  const dateFirst = getRandomDate();
-  const dateSecond = getRandomDate();
-
+const generateEvent = (destinationsList, dateFirst, dateSecond) => {
   const dateStart = new Date(Math.min(dateFirst, dateSecond));
   const dateEnd = new Date(Math.max(dateFirst, dateSecond));
 
@@ -95,12 +99,21 @@ const generateEvent = (destinationsList) => {
     destination: getRandomArrayElement(destinationsList),
     dateStart,
     dateEnd,
-    price: getRandomIntegerNumber(500, 3000),
+    price: getRandomIntegerNumber(20, 200),
     offers: generateEventOffers(),
     isFavorite: Math.random() > 0.5
   };
 };
 
 export const generateEvents = (count, destinationsList) => {
-  return new Array(count).fill(``).map(() => generateEvent(destinationsList));
+  let firstDate = getRandomDate();
+  let secondDate = getRandomDate(firstDate);
+  return new Array(count)
+    .fill(``)
+    .map(() => {
+      firstDate = secondDate + (getRandomIntegerNumber(5, 60) * 60 * 1000);
+      secondDate = getRandomDate(firstDate);
+      return generateEvent(destinationsList, firstDate, secondDate);
+    })
+    .sort((a, b) => a.dateStart > b.dateStart ? 1 : -1);
 };
