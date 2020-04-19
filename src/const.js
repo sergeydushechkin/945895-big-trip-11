@@ -12,3 +12,18 @@ export const EVENT_PREP = {
   [`sightseeing`]: `in`,
   [`restaurant`]: `in`
 };
+
+export const MONTH_NAMES = [
+  `Jan`,
+  `Feb`,
+  `Mar`,
+  `Apr`,
+  `May`,
+  `Jun`,
+  `Jul`,
+  `Augu`,
+  `Sep`,
+  `Oct`,
+  `Nov`,
+  `Dec`
+];

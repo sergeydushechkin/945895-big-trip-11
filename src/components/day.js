@@ -1,19 +1,5 @@
 import {formatDateReverse} from "../utils.js";
-
-export const MONTH_NAMES = [
-  `Jan`,
-  `Feb`,
-  `Mar`,
-  `Apr`,
-  `May`,
-  `Jun`,
-  `Jul`,
-  `Augu`,
-  `Sep`,
-  `Oct`,
-  `Nov`,
-  `Dec`
-];
+import {MONTH_NAMES} from "../const.js";
 
 export const createDayTemplate = (date, count) => {
   const dateRev = formatDateReverse(date);
