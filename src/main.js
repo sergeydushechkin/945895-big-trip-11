@@ -10,7 +10,7 @@ import {createEventEditTemplate} from "./components/event-edit.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
 import {createElement, formatDateReverse} from "./utils.js";
 
-const EVENTS_COUNT = 10;
+const EVENTS_COUNT = 20;
 
 const renderElement = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -19,13 +19,13 @@ const renderElement = (container, template, place) => {
 const destinationList = getDestinations();
 const events = generateEvents(EVENTS_COUNT, destinationList);
 
-const eventsDates = new Set(events.map((date) => formatDateReverse(date.dateStart)));
+const eventsDates = new Set(events.map((event) => formatDateReverse(event.dateStart)));
 
 // Отрисовка стоимости и информации о маршруте
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
-renderElement(tripMainElement, createTripCostTemplate(), `afterbegin`);
-renderElement(tripMainElement.querySelector(`.trip-main__trip-info`), createTripInfoTemplate(), `afterbegin`);
+renderElement(tripMainElement, createTripCostTemplate(events), `afterbegin`);
+renderElement(tripMainElement.querySelector(`.trip-main__trip-info`), createTripInfoTemplate(events), `afterbegin`);
 
 // Отрисовка меню и фильтрации
 renderElement(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), createMenuTemplate(), `afterend`);
@@ -41,29 +41,23 @@ renderElement(tripEventsElement, createEventEditTemplate(events[0], destinationL
 // Отрисовка списка дней
 renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
-renderElement(tripDaysListElement, createDayTemplate(events[0].dateStart, 1), `beforeend`);
 
 renderElement(
     tripDaysListElement,
     Array.from(eventsDates).sort().map((dayDate, dayIndex) => {
-      const dayElement = createElement(createDayTemplate(new Date(dayDate), dayIndex));
+      const dayElement = createElement(createDayTemplate(new Date(dayDate), dayIndex + 1));
 
       renderElement(
           dayElement.querySelector(`.trip-events__list`),
-          events.filter((event) => formatDateReverse(event.dateStart) === dayDate)
-            .sort((a, b) => a.dateStart > b.dateStart)
+          events.slice(1).filter((event) => formatDateReverse(event.dateStart) === dayDate)
             .map((event) => createEventTemplate(event))
             .join(`\n`),
           `beforeend`
       );
 
-      return dayElement.innerHTML;
+      return dayElement.outerHTML;
     })
     .join(`\n`),
     `beforeend`
 );
-// Отрисовка событий маршрута
-// const tripPointsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
-// for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
-//   renderElement(tripPointsListElement, createEventTemplate(events[eventIndex]), `beforeend`);
-// }
+
