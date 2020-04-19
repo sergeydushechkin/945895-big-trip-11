@@ -8,7 +8,7 @@ const castTimeFormat = (value) =>
   value < 10 ? `0${value}` : String(value);
 
 export const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours() % 12);
+  const hours = castTimeFormat(date.getHours());
   const minutes = castTimeFormat(date.getMinutes());
 
   return `${hours}:${minutes}`;
@@ -45,7 +45,7 @@ export const formatDuration = (date) => {
   } else if (date >= 3600000) {
     duration = `${formatDurationTime(date)}`;
   } else {
-    duration = `${date / 1000 / 60}M`;
+    duration = `${Math.round(date / 1000 / 60)}M`;
   }
   return duration;
 };
