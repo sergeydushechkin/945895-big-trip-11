@@ -69,8 +69,8 @@ export const createEventEditTemplate = (event, destionations) => {
   const {type, destination, dateStart, dateEnd, price, isFavorite} = event;
 
   const eventTypeName = capitalizeFirstLetter(type);
-  const eventDateStart = formatFullDate(dateStart);
-  const eventDateEnd = formatFullDate(dateEnd);
+  const eventDateStart = formatFullDate(new Date(dateStart));
+  const eventDateEnd = formatFullDate(new Date(dateEnd));
   const destinationList = createDestionationsListMarkup(destionations);
   const favorite = isFavorite ? `checked` : ``;
   const eventDetailsMarkup = createEventEditDetailsMarkup(event);

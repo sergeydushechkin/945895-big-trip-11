@@ -19,7 +19,7 @@ const renderElement = (container, template, place) => {
 const destinationList = getDestinations();
 const events = generateEvents(EVENTS_COUNT, destinationList);
 
-const eventsDates = new Set(events.map((event) => formatDateReverse(event.dateStart)));
+const eventsDates = new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))));
 
 // Отрисовка стоимости и информации о маршруте
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -49,7 +49,7 @@ renderElement(
 
       renderElement(
           dayElement.querySelector(`.trip-events__list`),
-          events.slice(1).filter((event) => formatDateReverse(event.dateStart) === dayDate)
+          events.slice(1).filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate)
             .map((event) => createEventTemplate(event))
             .join(`\n`),
           `beforeend`

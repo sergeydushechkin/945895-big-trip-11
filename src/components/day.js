@@ -2,7 +2,7 @@ import {formatDateReverse} from "../utils.js";
 import {MONTH_NAMES} from "../const.js";
 
 export const createDayTemplate = (date, count) => {
-  const dateRev = formatDateReverse(date);
+  const dateRev = formatDateReverse(new Date(date));
   const monthDay = `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}`;
   return (
     `<li class="trip-days__item  day">

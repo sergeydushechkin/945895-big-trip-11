@@ -90,10 +90,7 @@ const generateEventOffers = () => {
   return resultOffers;
 };
 
-const generateEvent = (destinationsList, dateFirst, dateSecond) => {
-  const dateStart = new Date(Math.min(dateFirst, dateSecond));
-  const dateEnd = new Date(Math.max(dateFirst, dateSecond));
-
+const generateEvent = (destinationsList, dateStart, dateEnd) => {
   return {
     type: getRandomArrayElement(EVENT_TYPES),
     destination: getRandomArrayElement(destinationsList),

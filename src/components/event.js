@@ -27,8 +27,10 @@ export const createEventTemplate = (event) => {
   const eventTypeName = capitalizeFirstLetter(type);
   const offersList = offers ? createOffersTemplate(offers) : ``;
   const duration = formatDuration(new Date(dateEnd - dateStart));
-  const timeStart = formatTime(dateStart);
-  const timeEnd = formatTime(dateEnd);
+  const dateStartMarkup = new Date(dateStart).toISOString();
+  const dateEndMarkup = new Date(dateEnd).toISOString();
+  const timeStart = formatTime(new Date(dateStart));
+  const timeEnd = formatTime(new Date(dateEnd));
 
   return (
     `<li class="trip-events__item">
@@ -40,9 +42,9 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateStart.toISOString()}">${timeStart}</time>
+            <time class="event__start-time" datetime="${dateStartMarkup}">${timeStart}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateEnd.toISOString()}">${timeEnd}</time>
+            <time class="event__end-time" datetime="${dateEndMarkup}">${timeEnd}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>
