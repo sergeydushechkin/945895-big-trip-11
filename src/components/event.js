@@ -1,33 +1,60 @@
-export const createEventTemplate = () => {
+import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils.js";
+import {EVENT_PREP} from "../const.js";
+
+const createOfferMarkup = (offer) => {
+  const {name, price} = offer;
+  return (
+    `<li class="event__offer">
+      <span class="event__offer-title">${name}</span>
+      &plus;
+      &euro;&nbsp;<span class="event__offer-price">${price}</span>
+    </li>`
+  );
+};
+
+const createOffersTemplate = (offers) => {
+  const offersMarkup = offers.map((offer) => offer.checked ? createOfferMarkup(offer) : ``).join(`\n`);
+  return (
+    `<ul class="event__selected-offers">
+      ${offersMarkup}
+    </ul>`
+  );
+};
+
+export const createEventTemplate = (event) => {
+  const {type, destination, dateStart, dateEnd, price, offers} = event;
+
+  const eventTypeName = capitalizeFirstLetter(type);
+  const offersList = offers ? createOffersTemplate(offers) : ``;
+  const duration = formatDuration(new Date(dateEnd - dateStart));
+  const dateStartMarkup = new Date(dateStart).toISOString();
+  const dateEndMarkup = new Date(dateEnd).toISOString();
+  const timeStart = formatTime(new Date(dateStart));
+  const timeEnd = formatTime(new Date(dateEnd));
+
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">Taxi to Amsterdam</h3>
+        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${dateStartMarkup}">${timeStart}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${dateEndMarkup}">${timeEnd}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${duration}</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">20</span>
-          </li>
-        </ul>
+        ${offersList}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
