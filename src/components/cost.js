@@ -1,9 +1,7 @@
 export const createTripCostTemplate = (events) => {
   const cost = events
     .reduce((totalCost, event) => {
-      return totalCost + event.price + event.offers.reduce((totalOffersPrice, offer) => {
-        return totalOffersPrice + (offer.checked ? offer.price : 0);
-      }, 0);
+      return totalCost + event.price;
     }, 0);
 
   return (

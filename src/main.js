@@ -36,7 +36,7 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 renderElement(tripEventsElement, createSortTemplate(), `beforeend`);
 
 // Отрисовка формы создания события
-renderElement(tripEventsElement, createEventEditTemplate(events[0], destinationList), `beforeend`);
+// renderElement(tripEventsElement, createEventEditTemplate(events[0], destinationList), `beforeend`);
 
 // Отрисовка списка дней
 renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
@@ -49,8 +49,10 @@ renderElement(
 
       renderElement(
           dayElement.querySelector(`.trip-events__list`),
-          events.slice(1).filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate)
-            .map((event) => createEventTemplate(event))
+          events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate)
+            .map((event, index) => {
+              return index ? createEventTemplate(event) : createEventEditTemplate(event, destinationList);
+            })
             .join(`\n`),
           `beforeend`
       );

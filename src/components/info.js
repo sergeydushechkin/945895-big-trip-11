@@ -1,8 +1,11 @@
 import {MONTH_NAMES} from "../const.js";
 
 export const createTripInfoTemplate = (events) => {
-  const beginDate = `${MONTH_NAMES[new Date(events[0].dateStart).getMonth()]} ${new Date(events[0].dateStart).getDate()}`;
-  const endDate = `${new Date(events[events.length - 1].dateEnd).getDate()}`;
+  const firstDate = new Date(events[0].dateStart);
+  const lastDate = new Date(events[events.length - 1].dateEnd);
+
+  const beginDate = `${MONTH_NAMES[firstDate.getMonth()]} ${firstDate.getDate()}`;
+  const endDate = `${lastDate.getDate()}`;
 
   const range = `${beginDate}&nbsp;&mdash;&nbsp;${endDate}`;
   const route = Array.from(new Set(events.map((event) => event.destination.name))).join(`  &mdash; `);
