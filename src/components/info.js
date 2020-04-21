@@ -2,6 +2,10 @@ import {MONTH_NAMES} from "../const.js";
 import {createElement} from "../utils.js";
 
 const createTripInfoTemplate = (events) => {
+  if (!events.length) {
+    return ` `;
+  }
+
   const firstDate = new Date(events[0].dateStart);
   const lastDate = new Date(events[events.length - 1].dateEnd);
 

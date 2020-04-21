@@ -1,10 +1,12 @@
 import {createElement} from "../utils.js";
 
 const createTripCostTemplate = (events) => {
-  const cost = events
-    .reduce((totalCost, event) => {
-      return totalCost + event.price;
-    }, 0);
+  const cost = events.length ?
+    events
+      .reduce((totalCost, event) => {
+        return totalCost + event.price;
+      }, 0)
+    : 0;
 
   return (
     `<section class="trip-main__trip-info  trip-info">

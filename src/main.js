@@ -7,6 +7,7 @@ import DaysListComponent from "./components/days-list.js";
 import DayComponent from "./components/day.js";
 import EventComponent from "./components/event.js";
 import EventEditComponent from "./components/event-edit.js";
+import NoEventsComponent from "./components/no-events.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
 import {formatDateReverse, RenderPosition, render} from "./utils.js";
 
@@ -76,6 +77,18 @@ const renderDaysList = (tripEventsElement, events, eventsDates) => {
   );
 };
 
+const renderTripEvents = (tripEventsElement, events, eventsDates) => {
+  if (!events.length) {
+    render(tripEventsElement, new NoEventsComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
+  // Отрисовка основной части с сортировкой
+  render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  // Отрисовка списка дней
+  renderDaysList(tripEventsElement, events, eventsDates);
+};
+
 const destinationList = getDestinations();
 const events = generateEvents(EVENTS_COUNT, destinationList);
 const eventsDates = Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))))).sort();
@@ -108,9 +121,6 @@ render(
     RenderPosition.AFTEREND
 );
 
-// Отрисовка основной части с сортировкой
+// Отрисовка основной части
 const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Отрисовка списка дней
-renderDaysList(tripEventsElement, events, eventsDates);
+renderTripEvents(tripEventsElement, events, eventsDates);
