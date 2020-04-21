@@ -1,4 +1,4 @@
-import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils.js";
+import {formatTime, formatDuration, capitalizeFirstLetter, createElement} from "../utils.js";
 import {EVENT_PREP} from "../const.js";
 
 const createOfferMarkup = (offer) => {
@@ -21,7 +21,7 @@ const createOffersTemplate = (offers) => {
   );
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {type, destination, dateStart, dateEnd, price, offers} = event;
 
   const eventTypeName = capitalizeFirstLetter(type);
@@ -63,3 +63,26 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor(event) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

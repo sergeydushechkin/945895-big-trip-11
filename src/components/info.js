@@ -1,6 +1,7 @@
 import {MONTH_NAMES} from "../const.js";
+import {createElement} from "../utils.js";
 
-export const createTripInfoTemplate = (events) => {
+const createTripInfoTemplate = (events) => {
   const firstDate = new Date(events[0].dateStart);
   const lastDate = new Date(events[events.length - 1].dateEnd);
 
@@ -18,3 +19,26 @@ export const createTripInfoTemplate = (events) => {
     </div>`
   );
 };
+
+export default class Info {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
