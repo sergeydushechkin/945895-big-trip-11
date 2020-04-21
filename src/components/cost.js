@@ -1,4 +1,6 @@
-export const createTripCostTemplate = (events) => {
+import {createElement} from "../utils.js";
+
+const createTripCostTemplate = (events) => {
   const cost = events
     .reduce((totalCost, event) => {
       return totalCost + event.price;
@@ -12,3 +14,26 @@ export const createTripCostTemplate = (events) => {
     </section>`
   );
 };
+
+export default class Cost {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return createTripCostTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

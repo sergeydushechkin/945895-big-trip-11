@@ -1,5 +1,5 @@
 import {EVENT_PREP} from "../const.js";
-import {formatFullDate, capitalizeFirstLetter} from "../utils.js";
+import {formatFullDate, capitalizeFirstLetter, createElement} from "../utils.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -65,7 +65,7 @@ const createDestionationsListMarkup = (destionations) => {
   return destionations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
-export const createEventEditTemplate = (event, destionations) => {
+const createEventEditTemplate = (event, destionations) => {
   const {type, destination, dateStart, dateEnd, price, isFavorite} = event;
 
   const eventTypeName = capitalizeFirstLetter(type);
@@ -195,3 +195,27 @@ export const createEventEditTemplate = (event, destionations) => {
     </form>`
   );
 };
+
+export default class EventEdit {
+  constructor(event, destinations) {
+    this._element = null;
+    this._event = event;
+    this._destinations = destinations;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._event, this._destinations);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

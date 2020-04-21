@@ -1,65 +1,97 @@
-import {createTripCostTemplate} from "./components/cost.js";
-import {createTripInfoTemplate} from "./components/info.js";
-import {createMenuTemplate} from "./components/menu.js";
-import {createFilterTemplate} from "./components/filter.js";
-import {createSortTemplate} from "./components/sort.js";
-import {createDaysListTemplate} from "./components/days-list.js";
-import {createDayTemplate} from "./components/day.js";
-import {createEventTemplate} from "./components/event.js";
-import {createEventEditTemplate} from "./components/event-edit.js";
+import TripCostComponent from "./components/cost.js";
+import TripInfoComponent from "./components/info.js";
+import MenuComponent from "./components/menu.js";
+import FilterComponent from "./components/filter.js";
+import SortComponent from "./components/sort.js";
+import DaysListComponent from "./components/days-list.js";
+import DayComponent from "./components/day.js";
+import EventComponent from "./components/event.js";
+import EventEditComponent from "./components/event-edit.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
-import {createElement, formatDateReverse} from "./utils.js";
+import {formatDateReverse, RenderPosition, render} from "./utils.js";
 
 const EVENTS_COUNT = 20;
 
-const renderElement = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const renderEvent = (dayElement, event) => {
+  const eventComponent = new EventComponent(event);
+  const roullupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+
+  roullupButton.addEventListener(`click`, () => {
+    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  });
+
+  const eventEditComponent = new EventEditComponent(event, destinationList);
+
+  eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  });
+
+  render(dayElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+const renderDay = (tripDaysListElement, dayDate, dayCount, events) => {
+  const dayComponent = new DayComponent(new Date(dayDate), dayCount);
+  const dayElement = dayComponent.getElement();
+
+  events.forEach((event) => {
+    renderEvent(dayElement.querySelector(`.trip-events__list`), event);
+  });
+
+  render(tripDaysListElement, dayElement, RenderPosition.BEFOREEND);
+};
+
+const renderDaysList = (tripEventsElement, events, eventsDates) => {
+  const daysListComponent = new DaysListComponent();
+  const daysListElement = daysListComponent.getElement();
+
+  eventsDates.forEach((dayDate, index) => {
+    const eventsList = events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate);
+    renderDay(daysListElement, dayDate, index + 1, eventsList);
+  });
+
+  render(
+      tripEventsElement,
+      daysListElement,
+      RenderPosition.BEFOREEND
+  );
 };
 
 const destinationList = getDestinations();
 const events = generateEvents(EVENTS_COUNT, destinationList);
+const eventsDates = Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))))).sort();
 
-const eventsDates = new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))));
+const tripMainElement = document.querySelector(`.trip-main`);
 
 // Отрисовка стоимости и информации о маршруте
-const tripMainElement = document.querySelector(`.trip-main`);
-const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
-renderElement(tripMainElement, createTripCostTemplate(events), `afterbegin`);
-renderElement(tripMainElement.querySelector(`.trip-main__trip-info`), createTripInfoTemplate(events), `afterbegin`);
+render(
+    tripMainElement,
+    new TripCostComponent(events).getElement(),
+    RenderPosition.AFTERBEGIN
+);
+render(
+    tripMainElement.querySelector(`.trip-main__trip-info`),
+    new TripInfoComponent(events).getElement(),
+    RenderPosition.AFTERBEGIN
+);
 
 // Отрисовка меню и фильтрации
-renderElement(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), createMenuTemplate(), `afterend`);
-renderElement(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), createFilterTemplate(), `afterend`);
+const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
+
+render(
+    tripMainControlsElement.querySelector(`h2:nth-of-type(1)`),
+    new MenuComponent().getElement(),
+    RenderPosition.AFTEREND
+);
+render(
+    tripMainControlsElement.querySelector(`h2:nth-of-type(2)`),
+    new FilterComponent().getElement(),
+    RenderPosition.AFTEREND
+);
 
 // Отрисовка основной части с сортировкой
 const tripEventsElement = document.querySelector(`.trip-events`);
-renderElement(tripEventsElement, createSortTemplate(), `beforeend`);
-
-// Отрисовка формы создания события
-// renderElement(tripEventsElement, createEventEditTemplate(events[0], destinationList), `beforeend`);
+render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
 // Отрисовка списка дней
-renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
-const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
-
-renderElement(
-    tripDaysListElement,
-    Array.from(eventsDates).sort().map((dayDate, dayIndex) => {
-      const dayElement = createElement(createDayTemplate(new Date(dayDate), dayIndex + 1));
-
-      renderElement(
-          dayElement.querySelector(`.trip-events__list`),
-          events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate)
-            .map((event, index) => {
-              return index ? createEventTemplate(event) : createEventEditTemplate(event, destinationList);
-            })
-            .join(`\n`),
-          `beforeend`
-      );
-
-      return dayElement.outerHTML;
-    })
-    .join(`\n`),
-    `beforeend`
-);
-
+renderDaysList(tripEventsElement, events, eventsDates);
