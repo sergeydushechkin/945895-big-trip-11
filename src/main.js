@@ -13,18 +13,37 @@ import {formatDateReverse, RenderPosition, render} from "./utils.js";
 const EVENTS_COUNT = 20;
 
 const renderEvent = (dayElement, event) => {
+  const replaceEventToEventEdit = () => {
+    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  };
+
+  const replaceEventEditToEvent = () => {
+    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  };
+
+  const onEscKeyKeydown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      replaceEventEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyKeydown);
+    }
+  };
+
   const eventComponent = new EventComponent(event);
   const roullupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
   roullupButton.addEventListener(`click`, () => {
-    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replaceEventToEventEdit();
+    document.addEventListener(`keydown`, onEscKeyKeydown);
   });
 
   const eventEditComponent = new EventEditComponent(event, destinationList);
 
   eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replaceEventEditToEvent();
+    document.removeEventListener(`keydown`, onEscKeyKeydown);
   });
 
   render(dayElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
