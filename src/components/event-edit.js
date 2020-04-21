@@ -197,13 +197,14 @@ const createEventEditTemplate = (event, destionations) => {
 };
 
 export default class EventEdit {
-  constructor(event) {
+  constructor(event, destinations) {
     this._element = null;
     this._event = event;
+    this._destinations = destinations;
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event);
+    return createEventEditTemplate(this._event, this._destinations);
   }
 
   getElement() {
