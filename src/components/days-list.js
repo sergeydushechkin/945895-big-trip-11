@@ -7,7 +7,7 @@ const createDaysListTemplate = () => {
   );
 };
 
-export default class Event {
+export default class DaysList {
   constructor() {
     this._element = null;
   }

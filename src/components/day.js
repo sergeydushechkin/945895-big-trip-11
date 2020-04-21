@@ -24,7 +24,7 @@ export default class Day {
   }
 
   getTemplate() {
-    return createDayTemplate(this._events, this._count);
+    return createDayTemplate(this._date, this._count);
   }
 
   getElement() {
