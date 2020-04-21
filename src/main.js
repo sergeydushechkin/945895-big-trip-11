@@ -16,16 +16,16 @@ const renderEvent = (dayElement, event) => {
   const eventComponent = new EventComponent(event);
   const roullupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
-  // roullupButton.addEventListener(`click`, () => {
-  //   dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
-  // });
+  roullupButton.addEventListener(`click`, () => {
+    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  });
 
-  // const eventEditComponent = new EventEditComponent(event, destinationList);
-  // const eventEditSaveButton = eventEditComponent.getElement().querySelector(`.event__save-btn`);
+  const eventEditComponent = new EventEditComponent(event, destinationList);
 
-  // eventEditSaveButton.addEventListener(`click`, () => {
-  //   dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-  // });
+  eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  });
 
   render(dayElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -35,7 +35,7 @@ const renderDay = (tripDaysListElement, dayDate, dayCount, events) => {
   const dayElement = dayComponent.getElement();
 
   events.forEach((event) => {
-    renderEvent(dayElement, event);
+    renderEvent(dayElement.querySelector(`.trip-events__list`), event);
   });
 
   render(tripDaysListElement, dayElement, RenderPosition.BEFOREEND);
@@ -50,10 +50,8 @@ const renderDaysList = (tripEventsElement, events, eventsDates) => {
     renderDay(daysListElement, dayDate, index + 1, eventsList);
   });
 
-  const temp = tripEventsElement.querySelector(`.trip-events__list`);
-
   render(
-      tripEventsElement.querySelector(`.trip-events__list`),
+      tripEventsElement,
       daysListElement,
       RenderPosition.BEFOREEND
   );
@@ -97,28 +95,3 @@ render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOR
 
 // Отрисовка списка дней
 renderDaysList(tripEventsElement, events, eventsDates);
-/*
-renderElement(tripEventsElement, createDaysListTemplate(), `beforeend`);
-const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
-
-renderElement(
-    tripDaysListElement,
-    Array.from(eventsDates).sort().map((dayDate, dayIndex) => {
-      const dayElement = createElement(createDayTemplate(new Date(dayDate), dayIndex + 1));
-
-      renderElement(
-          dayElement.querySelector(`.trip-events__list`),
-          events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate)
-          //   .map((event, index) => {
-          //     return index ? createEventTemplate(event) : createEventEditTemplate(event, destinationList);
-          //   })
-          //   .join(`\n`),
-          // `beforeend`
-      );
-
-      return dayElement.outerHTML;
-    })
-    .join(`\n`),
-    `beforeend`
-);
-*/
