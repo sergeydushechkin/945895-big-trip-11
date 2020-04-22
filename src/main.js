@@ -7,24 +7,44 @@ import DaysListComponent from "./components/days-list.js";
 import DayComponent from "./components/day.js";
 import EventComponent from "./components/event.js";
 import EventEditComponent from "./components/event-edit.js";
+import NoEventsComponent from "./components/no-events.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
 import {formatDateReverse, RenderPosition, render} from "./utils.js";
 
 const EVENTS_COUNT = 20;
 
 const renderEvent = (dayElement, event) => {
+  const replaceEventToEventEdit = () => {
+    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+  };
+
+  const replaceEventEditToEvent = () => {
+    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+  };
+
+  const onEscKeyKeydown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      replaceEventEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyKeydown);
+    }
+  };
+
   const eventComponent = new EventComponent(event);
   const roullupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
   roullupButton.addEventListener(`click`, () => {
-    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replaceEventToEventEdit();
+    document.addEventListener(`keydown`, onEscKeyKeydown);
   });
 
   const eventEditComponent = new EventEditComponent(event, destinationList);
 
   eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replaceEventEditToEvent();
+    document.removeEventListener(`keydown`, onEscKeyKeydown);
   });
 
   render(dayElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
@@ -55,6 +75,18 @@ const renderDaysList = (tripEventsElement, events, eventsDates) => {
       daysListElement,
       RenderPosition.BEFOREEND
   );
+};
+
+const renderTripEvents = (tripEventsElement, events, eventsDates) => {
+  if (!events.length) {
+    render(tripEventsElement, new NoEventsComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
+  // Отрисовка основной части с сортировкой
+  render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  // Отрисовка списка дней
+  renderDaysList(tripEventsElement, events, eventsDates);
 };
 
 const destinationList = getDestinations();
@@ -89,9 +121,6 @@ render(
     RenderPosition.AFTEREND
 );
 
-// Отрисовка основной части с сортировкой
+// Отрисовка основной части
 const tripEventsElement = document.querySelector(`.trip-events`);
-render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
-
-// Отрисовка списка дней
-renderDaysList(tripEventsElement, events, eventsDates);
+renderTripEvents(tripEventsElement, events, eventsDates);
