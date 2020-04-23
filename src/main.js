@@ -9,7 +9,8 @@ import EventComponent from "./components/event.js";
 import EventEditComponent from "./components/event-edit.js";
 import NoEventsComponent from "./components/no-events.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
-import {formatDateReverse, RenderPosition, render} from "./utils.js";
+import {RenderPosition, render} from "./utils/render.js";
+import {formatDateReverse} from "./utils/common.js";
 
 const EVENTS_COUNT = 20;
 

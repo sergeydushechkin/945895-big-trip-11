@@ -1,5 +1,5 @@
 import {EVENT_TYPES} from "../const.js";
-import {getRandomArrayElement, getRandomIntegerNumber} from "../utils.js";
+import {getRandomArrayElement, getRandomIntegerNumber} from "../utils/common.js";
 
 export const cities = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `London`];
 

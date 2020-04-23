@@ -1,4 +1,5 @@
-import {formatTime, formatDuration, capitalizeFirstLetter, createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils/common.js";
 import {EVENT_PREP} from "../const.js";
 
 const createOfferMarkup = (offer) => {
@@ -64,25 +65,14 @@ const createEventTemplate = (event) => {
   );
 };
 
-export default class Event {
+export default class Event extends AbstractComponent {
   constructor(event) {
-    this._element = null;
+    super();
+
     this._event = event;
   }
 
   getTemplate() {
     return createEventTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

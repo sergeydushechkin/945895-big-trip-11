@@ -1,5 +1,6 @@
 import {EVENT_PREP} from "../const.js";
-import {formatFullDate, capitalizeFirstLetter, createElement} from "../utils.js";
+import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -196,26 +197,15 @@ const createEventEditTemplate = (event, destionations) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractComponent {
   constructor(event, destinations) {
-    this._element = null;
+    super();
+
     this._event = event;
     this._destinations = destinations;
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event, this._destinations);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
