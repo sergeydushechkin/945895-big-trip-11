@@ -9,18 +9,18 @@ import EventComponent from "./components/event.js";
 import EventEditComponent from "./components/event-edit.js";
 import NoEventsComponent from "./components/no-events.js";
 import {generateEvents, getDestinations} from "./mock/event.js";
-import {RenderPosition, render} from "./utils/render.js";
+import {RenderPosition, render, replace} from "./utils/render.js";
 import {formatDateReverse} from "./utils/common.js";
 
 const EVENTS_COUNT = 20;
 
 const renderEvent = (dayElement, event) => {
   const replaceEventToEventEdit = () => {
-    dayElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replace(eventEditComponent, eventComponent);
   };
 
   const replaceEventEditToEvent = () => {
-    dayElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replace(eventComponent, eventEditComponent);
   };
 
   const onEscKeyKeydown = (evt) => {
@@ -33,59 +33,55 @@ const renderEvent = (dayElement, event) => {
   };
 
   const eventComponent = new EventComponent(event);
-  const roullupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
 
-  roullupButton.addEventListener(`click`, () => {
+  eventComponent.setRollupButtonClickHandler(() => {
     replaceEventToEventEdit();
     document.addEventListener(`keydown`, onEscKeyKeydown);
   });
 
   const eventEditComponent = new EventEditComponent(event, destinationList);
-
-  eventEditComponent.getElement().addEventListener(`submit`, (evt) => {
+  eventEditComponent.setFormSubmitHandler((evt) => {
     evt.preventDefault();
     replaceEventEditToEvent();
     document.removeEventListener(`keydown`, onEscKeyKeydown);
   });
 
-  render(dayElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+  render(dayElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
 const renderDay = (tripDaysListElement, dayDate, dayCount, events) => {
   const dayComponent = new DayComponent(new Date(dayDate), dayCount);
-  const dayElement = dayComponent.getElement();
 
   events.forEach((event) => {
-    renderEvent(dayElement.querySelector(`.trip-events__list`), event);
+    renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event);
   });
 
-  render(tripDaysListElement, dayElement, RenderPosition.BEFOREEND);
+  render(tripDaysListElement, dayComponent, RenderPosition.BEFOREEND);
 };
 
 const renderDaysList = (tripEventsElement, events, eventsDates) => {
   const daysListComponent = new DaysListComponent();
-  const daysListElement = daysListComponent.getElement();
 
   eventsDates.forEach((dayDate, index) => {
     const eventsList = events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate);
-    renderDay(daysListElement, dayDate, index + 1, eventsList);
+    renderDay(daysListComponent.getElement(), dayDate, index + 1, eventsList);
   });
 
   render(
       tripEventsElement,
-      daysListElement,
+      daysListComponent,
       RenderPosition.BEFOREEND
   );
 };
 
 const renderTripEvents = (tripEventsElement, events, eventsDates) => {
   if (!events.length) {
-    render(tripEventsElement, new NoEventsComponent().getElement(), RenderPosition.BEFOREEND);
+    render(tripEventsElement, new NoEventsComponent(), RenderPosition.BEFOREEND);
     return;
   }
 
   // Отрисовка основной части с сортировкой
-  render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  render(tripEventsElement, new SortComponent(), RenderPosition.BEFOREEND);
   // Отрисовка списка дней
   renderDaysList(tripEventsElement, events, eventsDates);
 };
@@ -99,12 +95,12 @@ const tripMainElement = document.querySelector(`.trip-main`);
 // Отрисовка стоимости и информации о маршруте
 render(
     tripMainElement,
-    new TripCostComponent(events).getElement(),
+    new TripCostComponent(events),
     RenderPosition.AFTERBEGIN
 );
 render(
     tripMainElement.querySelector(`.trip-main__trip-info`),
-    new TripInfoComponent(events).getElement(),
+    new TripInfoComponent(events),
     RenderPosition.AFTERBEGIN
 );
 
@@ -113,12 +109,12 @@ const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-
 
 render(
     tripMainControlsElement.querySelector(`h2:nth-of-type(1)`),
-    new MenuComponent().getElement(),
+    new MenuComponent(),
     RenderPosition.AFTEREND
 );
 render(
     tripMainControlsElement.querySelector(`h2:nth-of-type(2)`),
-    new FilterComponent().getElement(),
+    new FilterComponent(),
     RenderPosition.AFTEREND
 );
 

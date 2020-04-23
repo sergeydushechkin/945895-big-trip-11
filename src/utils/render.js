@@ -15,16 +15,29 @@ export const createElement = (elementTemplate) => {
 export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
+      container.prepend(element.getElement());
       break;
     case RenderPosition.BEFOREEND:
-      container.append(element);
+      container.append(element.getElement());
       break;
     case RenderPosition.BEFOREBEGIN:
-      container.before(element);
+      container.before(element.getElement());
       break;
     case RenderPosition.AFTEREND:
-      container.after(element);
+      container.after(element.getElement());
       break;
   }
 };
+
+export const replace = (newComponent, oldComponent) => {
+  const container = oldComponent.getElement().parentElement;
+  const newElement = newComponent.getElement();
+  const oldElement = oldComponent.getElement();
+
+  const isElementsExists = !!(container && newElement && oldElement);
+
+  if (isElementsExists && container.contains(oldElement)) {
+    container.replaceChild(newElement, oldElement);
+  }
+};
+
