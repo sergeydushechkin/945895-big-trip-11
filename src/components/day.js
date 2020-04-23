@@ -1,4 +1,5 @@
-import {formatDateReverse, createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {formatDateReverse} from "../utils/common.js";
 import {MONTH_NAMES} from "../const.js";
 
 const createDayTemplate = (date, count) => {
@@ -16,26 +17,15 @@ const createDayTemplate = (date, count) => {
   );
 };
 
-export default class Day {
+export default class Day extends AbstractComponent {
   constructor(date, count) {
-    this._element = null;
+    super();
+
     this._date = date;
     this._count = count;
   }
 
   getTemplate() {
     return createDayTemplate(this._date, this._count);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
