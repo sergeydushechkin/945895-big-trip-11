@@ -84,6 +84,9 @@ export default class TripController {
 
     // Отрисовка основной части с сортировкой
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(() => {
+
+    });
 
     // Отрисовка списка дней
     renderEvents(this._container, this._daysListComponent, events, destinationList);
