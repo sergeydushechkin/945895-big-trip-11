@@ -52,13 +52,17 @@ const renderDay = (tripDaysListElement, dayDate, dayCount, events, destinationLi
   render(tripDaysListElement, dayComponent, RenderPosition.BEFOREEND);
 };
 
-const renderEvents = (eventsContainer, daysListComponent, events, destinationList) => {
-  // Получает список дат
-  const eventsDates = Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))))).sort();
-  eventsDates.forEach((dayDate, index) => {
-    const eventsList = events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate);
-    renderDay(daysListComponent.getElement(), dayDate, index + 1, eventsList, destinationList);
-  });
+const renderEvents = (eventsContainer, daysListComponent, events, sortType, destinationList) => {
+  if (sortType === SortType.EVENT) {
+    // Получает список дат
+    const eventsDates = Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))))).sort();
+    eventsDates.forEach((dayDate, index) => {
+      const eventsList = events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate);
+      renderDay(daysListComponent.getElement(), dayDate, index + 1, eventsList, destinationList);
+    });
+  } else {
+    renderDay(daysListComponent.getElement(), null, ` `, events, destinationList);
+  }
 
   render(
       eventsContainer,
@@ -102,11 +106,13 @@ export default class TripController {
 
     // Отрисовка основной части с сортировкой
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
-    this._sortComponent.setSortTypeChangeHandler(() => {
-
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      const sortedEvents = getSortedEvents(events, sortType);
+      this._daysListComponent.getElement().innerHTML = ``;
+      renderEvents(this._container, this._daysListComponent, sortedEvents, sortType, destinationList);
     });
 
-    // Отрисовка списка дней
-    renderEvents(this._container, this._daysListComponent, events, destinationList);
+    // Отрисовка событий
+    renderEvents(this._container, this._daysListComponent, events, SortType.EVENT, destinationList);
   }
 }
