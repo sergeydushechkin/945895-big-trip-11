@@ -43,7 +43,7 @@ const renderEvent = (dayElement, event, destinationList) => {
 };
 
 const renderDay = (tripDaysListElement, dayDate, dayCount, events, destinationList) => {
-  const dayComponent = new DayComponent(new Date(dayDate), dayCount);
+  const dayComponent = new DayComponent(dayDate, dayCount);
 
   events.forEach((event) => {
     renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event, destinationList);
