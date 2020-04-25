@@ -1,4 +1,4 @@
-import SortComponent from "../components/sort.js";
+import SortComponent, {SortType} from "../components/sort.js";
 import DaysListComponent from "../components/days-list.js";
 import DayComponent from "../components/day.js";
 import EventComponent from "../components/event.js";
@@ -65,6 +65,24 @@ const renderEvents = (eventsContainer, daysListComponent, events, destinationLis
       daysListComponent,
       RenderPosition.BEFOREEND
   );
+};
+
+const getSortedEvents = (events, sortType) => {
+  let sortedEvents = [];
+
+  switch (sortType) {
+    case SortType.EVENT:
+      sortedEvents = events;
+      break;
+    case SortType.TIME:
+      sortedEvents = events.slice().sort((a, b) => (b.dateEnd - b.dateStart) - (a.dateEnd - a.dateStart));
+      break;
+    case SortType.PRICE:
+      sortedEvents = events.slice().sort((a, b) => b.price - a.price);
+      break;
+  }
+
+  return sortedEvents;
 };
 
 export default class TripController {
