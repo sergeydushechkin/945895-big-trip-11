@@ -2,9 +2,11 @@ import AbstractComponent from "./abstract-component.js";
 import {formatDateReverse} from "../utils/common.js";
 import {MONTH_NAMES} from "../const.js";
 
-const createDayTemplate = (date, count) => {
-  const dateRev = formatDateReverse(new Date(date));
-  const monthDay = `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}`;
+const createDayTemplate = (dayDate, count) => {
+  const date = new Date(dayDate);
+
+  const dateRev = formatDateReverse(date);
+  const monthDay = dayDate ? `${MONTH_NAMES[date.getMonth()]} ${date.getDate()}` : ` `;
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
