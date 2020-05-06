@@ -7,7 +7,7 @@ import NoEventsComponent from "../components/no-events.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
 
-const renderEvent = (dayElement, event, destinationList) => {
+const renderEvent = (dayElement, event) => {
   const replaceEventToEventEdit = () => {
     replace(eventEditComponent, eventComponent);
   };
@@ -32,7 +32,7 @@ const renderEvent = (dayElement, event, destinationList) => {
     document.addEventListener(`keydown`, onEscKeyKeydown);
   });
 
-  const eventEditComponent = new EventEditComponent(event, destinationList);
+  const eventEditComponent = new EventEditComponent(event);
   eventEditComponent.setFormSubmitHandler((evt) => {
     evt.preventDefault();
     replaceEventEditToEvent();
@@ -42,26 +42,26 @@ const renderEvent = (dayElement, event, destinationList) => {
   render(dayElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
-const renderDay = (tripDaysListElement, dayDate, dayCount, events, destinationList) => {
+const renderDay = (tripDaysListElement, dayDate, dayCount, events) => {
   const dayComponent = new DayComponent(dayDate, dayCount);
 
   events.forEach((event) => {
-    renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event, destinationList);
+    renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event);
   });
 
   render(tripDaysListElement, dayComponent, RenderPosition.BEFOREEND);
 };
 
-const renderEvents = (eventsContainer, daysListComponent, events, sortType, destinationList) => {
+const renderEvents = (eventsContainer, daysListComponent, events, sortType) => {
   if (sortType === SortType.EVENT) {
     // Получает список дат
     const eventsDates = Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart))))).sort();
     eventsDates.forEach((dayDate, index) => {
       const eventsList = events.filter((event) => formatDateReverse(new Date(event.dateStart)) === dayDate);
-      renderDay(daysListComponent.getElement(), dayDate, index + 1, eventsList, destinationList);
+      renderDay(daysListComponent.getElement(), dayDate, index + 1, eventsList);
     });
   } else {
-    renderDay(daysListComponent.getElement(), null, ` `, events, destinationList);
+    renderDay(daysListComponent.getElement(), null, ` `, events);
   }
 
   render(
@@ -98,7 +98,7 @@ export default class TripController {
     this._daysListComponent = new DaysListComponent();
   }
 
-  render(events, destinationList) {
+  render(events) {
     if (!events.length) {
       render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
       return;
@@ -109,10 +109,10 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       const sortedEvents = getSortedEvents(events, sortType);
       this._daysListComponent.getElement().innerHTML = ``;
-      renderEvents(this._container, this._daysListComponent, sortedEvents, sortType, destinationList);
+      renderEvents(this._container, this._daysListComponent, sortedEvents, sortType);
     });
 
     // Отрисовка событий
-    renderEvents(this._container, this._daysListComponent, events, SortType.EVENT, destinationList);
+    renderEvents(this._container, this._daysListComponent, events, SortType.EVENT);
   }
 }

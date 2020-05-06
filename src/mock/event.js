@@ -90,7 +90,7 @@ const generateEventOffers = () => {
   return resultOffers;
 };
 
-const generateEvent = (destinationsList, dateStart, dateEnd) => {
+const generateEvent = (dateStart, dateEnd) => {
   return {
     type: getRandomArrayElement(EVENT_TYPES),
     destination: getRandomArrayElement(destinationsList),
@@ -102,7 +102,7 @@ const generateEvent = (destinationsList, dateStart, dateEnd) => {
   };
 };
 
-export const generateEvents = (count, destinationsList) => {
+export const generateEvents = (count) => {
   let firstDate = getRandomDate();
   let secondDate = getRandomDate(firstDate);
   return new Array(count)
@@ -110,7 +110,9 @@ export const generateEvents = (count, destinationsList) => {
     .map(() => {
       firstDate = secondDate + (getRandomIntegerNumber(5, 60) * 60 * 1000);
       secondDate = getRandomDate(firstDate);
-      return generateEvent(destinationsList, firstDate, secondDate);
+      return generateEvent(firstDate, secondDate);
     })
     .sort((a, b) => a.dateStart > b.dateStart ? 1 : -1);
 };
+
+export const destinationsList = getDestinations();

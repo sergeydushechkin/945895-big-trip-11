@@ -1,6 +1,7 @@
 import {EVENT_PREP} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
+import {destinationsList} from "../mock/event.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -72,7 +73,7 @@ const createEventEditTemplate = (event, destionations) => {
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(new Date(dateStart));
   const eventDateEnd = formatFullDate(new Date(dateEnd));
-  const destinationList = createDestionationsListMarkup(destionations);
+  const destinationListMarkup = createDestionationsListMarkup(destionations);
   const favorite = isFavorite ? `checked` : ``;
   const eventDetailsMarkup = createEventEditDetailsMarkup(event);
 
@@ -153,7 +154,7 @@ const createEventEditTemplate = (event, destionations) => {
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${destinationList}
+            ${destinationListMarkup}
           </datalist>
         </div>
 
@@ -198,11 +199,11 @@ const createEventEditTemplate = (event, destionations) => {
 };
 
 export default class EventEdit extends AbstractComponent {
-  constructor(event, destinations) {
+  constructor(event) {
     super();
 
     this._event = event;
-    this._destinations = destinations;
+    this._destinations = destinationsList;
   }
 
   getTemplate() {
