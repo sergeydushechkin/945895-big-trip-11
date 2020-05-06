@@ -1,52 +1,17 @@
 import SortComponent, {SortType} from "../components/sort.js";
 import DaysListComponent from "../components/days-list.js";
 import DayComponent from "../components/day.js";
-import EventComponent from "../components/event.js";
-import EventEditComponent from "../components/event-edit.js";
 import NoEventsComponent from "../components/no-events.js";
-import {RenderPosition, render, replace} from "../utils/render.js";
+import {RenderPosition, render} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
-
-const renderEvent = (dayElement, event) => {
-  const replaceEventToEventEdit = () => {
-    replace(eventEditComponent, eventComponent);
-  };
-
-  const replaceEventEditToEvent = () => {
-    replace(eventComponent, eventEditComponent);
-  };
-
-  const onEscKeyKeydown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      replaceEventEditToEvent();
-      document.removeEventListener(`keydown`, onEscKeyKeydown);
-    }
-  };
-
-  const eventComponent = new EventComponent(event);
-
-  eventComponent.setRollupButtonClickHandler(() => {
-    replaceEventToEventEdit();
-    document.addEventListener(`keydown`, onEscKeyKeydown);
-  });
-
-  const eventEditComponent = new EventEditComponent(event);
-  eventEditComponent.setFormSubmitHandler((evt) => {
-    evt.preventDefault();
-    replaceEventEditToEvent();
-    document.removeEventListener(`keydown`, onEscKeyKeydown);
-  });
-
-  render(dayElement, eventComponent, RenderPosition.BEFOREEND);
-};
+import PointController from "./point-controller.js";
 
 const renderDay = (tripDaysListElement, dayDate, dayCount, events) => {
   const dayComponent = new DayComponent(dayDate, dayCount);
 
   events.forEach((event) => {
-    renderEvent(dayComponent.getElement().querySelector(`.trip-events__list`), event);
+    const pointController = new PointController(dayComponent.getElement().querySelector(`.trip-events__list`));
+    pointController.render(event);
   });
 
   render(tripDaysListElement, dayComponent, RenderPosition.BEFOREEND);
