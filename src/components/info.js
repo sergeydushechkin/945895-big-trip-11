@@ -13,7 +13,7 @@ const createTripInfoTemplate = (events) => {
   const endDate = `${lastDate.getDate()}`;
 
   const range = `${beginDate}&nbsp;&mdash;&nbsp;${endDate}`;
-  const route = Array.from(new Set(events.map((event) => event.destination.name))).join(`  &mdash; `);
+  const route = Array.from(new Set(events.map((event) => event.destination))).join(`  &mdash; `);
 
   return (
     `<div class="trip-info__main">

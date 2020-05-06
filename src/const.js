@@ -8,7 +8,7 @@ export const EVENT_PREP = {
   [`transport`]: `to`,
   [`drive`]: `to`,
   [`flight`]: `to`,
-  [`check`]: `in`,
+  [`check-in`]: `in`,
   [`sightseeing`]: `in`,
   [`restaurant`]: `in`
 };

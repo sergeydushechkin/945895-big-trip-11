@@ -93,7 +93,7 @@ const generateEventOffers = () => {
 const generateEvent = (dateStart, dateEnd) => {
   return {
     type: getRandomArrayElement(EVENT_TYPES),
-    destination: getRandomArrayElement(destinationsList),
+    destination: getRandomArrayElement(destinationsList).name,
     dateStart,
     dateEnd,
     price: getRandomIntegerNumber(20, 200),

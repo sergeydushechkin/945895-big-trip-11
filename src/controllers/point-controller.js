@@ -29,6 +29,7 @@ export default class PointController {
 
     this._eventEditComponent.setEventFavoriteButtinClickHandler((evt) => {
       this._onDataChange(
+          this,
           this._event,
           Object.assign({}, this._event, {isFavorite: evt.target.checked})
       );

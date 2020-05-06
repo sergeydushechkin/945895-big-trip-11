@@ -1,6 +1,6 @@
 import {EVENT_PREP} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import {destinationsList} from "../mock/event.js";
 
 const createEventEditPhotosMarkup = (photos) => {
@@ -45,9 +45,9 @@ const createEventEditOffersMarkup = (offers) => {
   .join(`\n`);
 };
 
-const createEventEditDetailsMarkup = (event) => {
+const createEventEditDetailsMarkup = (event, destination) => {
   const eventOffersMarkup = createEventEditOffersMarkup(event.offers);
-  const eventDestinationsMarkup = createEventEditDestinationsMarkup(event.destination);
+  const eventDestinationsMarkup = createEventEditDestinationsMarkup(destination);
   return (
     `<section class="event__details">
       <section class="event__section  event__section--offers">
@@ -63,19 +63,22 @@ const createEventEditDetailsMarkup = (event) => {
   );
 };
 
-const createDestionationsListMarkup = (destionations) => {
-  return destionations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
+const createdestinationsListMarkup = (destinations) => {
+  return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
-const createEventEditTemplate = (event, destionations) => {
-  const {type, destination, dateStart, dateEnd, price, isFavorite} = event;
+const createEventEditTemplate = (event, options, destinations) => {
+  const {dateStart, dateEnd, price, isFavorite} = event;
+  const {type, destination} = options;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(new Date(dateStart));
   const eventDateEnd = formatFullDate(new Date(dateEnd));
-  const destinationListMarkup = createDestionationsListMarkup(destionations);
+  const destinationListMarkup = createdestinationsListMarkup(destinations);
   const favorite = isFavorite ? `checked` : ``;
-  const eventDetailsMarkup = createEventEditDetailsMarkup(event);
+
+  const eventDestination = destinations.filter((dest) => dest.name === destination);
+  const eventDetailsMarkup = createEventEditDetailsMarkup(event, eventDestination);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -152,7 +155,7 @@ const createEventEditTemplate = (event, destionations) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${eventTypeName} ${EVENT_PREP[type]}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${destinationListMarkup}
           </datalist>
@@ -198,23 +201,58 @@ const createEventEditTemplate = (event, destionations) => {
   );
 };
 
-export default class EventEdit extends AbstractComponent {
+export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
 
     this._event = event;
+    this._eventType = event.type;
+    this._eventDestination = event.destination;
+
     this._destinations = destinationsList;
+
+    this._submitHandler = null;
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._destinations);
+    return createEventEditTemplate(
+        this._event,
+        {type: this._eventType, destination: this._eventDestination},
+        this._destinations
+    );
   }
 
   setFormSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
+    this._submitHandler = handler;
   }
 
   setEventFavoriteButtinClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+  }
+
+  recoveryListeners() {
+    this.setFormSubmitHandler(this._submitHandler);
+    this._subscribeOnEvents();
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    const eventTypeElement = element.querySelector(`.event__type-list`);
+    eventTypeElement.addEventListener(`change`, () => {
+      this._eventType = eventTypeElement.querySelector(`.event__type-input:checked`).value;
+      this.rerender();
+    });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      this._eventDestination = evt.target.value;
+      this.rerender();
+    });
   }
 }
