@@ -3,16 +3,18 @@ import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
     this._event = null;
     this._eventComponent = null;
     this._eventEditComponent = null;
+    this._onDataChange = onDataChange;
   }
 
   render(event) {
-    this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._event = event;
+    this._eventComponent = new EventComponent(this._event);
+    this._eventEditComponent = new EventEditComponent(this._event);
 
     this._eventComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEventEdit();
@@ -23,6 +25,13 @@ export default class PointController {
       evt.preventDefault();
       this._replaceEventEditToEvent();
       document.removeEventListener(`keydown`, this._onEscKeyKeydown);
+    });
+
+    this._eventEditComponent.setEventFavoriteButtinClickHandler((evt) => {
+      this._onDataChange(
+          this._event,
+          Object.assign({}, this._event, {isFavorite: evt.target.checked})
+      );
     });
 
     render(this._container, this._eventComponent, RenderPosition.BEFOREEND);

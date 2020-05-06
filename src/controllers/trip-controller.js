@@ -56,7 +56,7 @@ export default class TripController {
     const dayComponent = new DayComponent(dayDate, dayCount);
 
     eventsList.forEach((event) => {
-      const pointController = new PointController(dayComponent.getElement().querySelector(`.trip-events__list`));
+      const pointController = new PointController(dayComponent.getElement().querySelector(`.trip-events__list`), this._onDataChange);
       pointController.render(event);
     });
 
@@ -79,6 +79,9 @@ export default class TripController {
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
+  _onDataChange() {
+
+  }
 
   _onSortTypeChangeHandler(sortType) {
     const sortedEvents = getSortedEvents(this._events, sortType);
