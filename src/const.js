@@ -13,6 +13,19 @@ export const EVENT_PREP = {
   [`restaurant`]: `in`
 };
 
+export const EVENT_OFFERS = {
+  [`taxi`]: [`uber`, `comfort`],
+  [`bus`]: [`comfort`, `luggage`],
+  [`train`]: [`comfort`, `breakfast`],
+  [`ship`]: [`comfort`, `luggage`, `breakfast`],
+  [`transport`]: [`luggage`, `breakfast`],
+  [`drive`]: [`car`],
+  [`flight`]: [`luggage`, `breakfast`],
+  [`check-in`]: [`luggage`, `breakfast`],
+  [`sightseeing`]: [`car`, `uber`],
+  [`restaurant`]: []
+};
+
 export const MONTH_NAMES = [
   `Jan`,
   `Feb`,
