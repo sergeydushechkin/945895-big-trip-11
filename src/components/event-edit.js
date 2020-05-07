@@ -1,7 +1,7 @@
-import {EVENT_PREP} from "../const.js";
+import {EVENT_PREP, EVENT_OFFERS} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {destinationsList} from "../mock/event.js";
+import {destinationsList, eventsOffers} from "../mock/event.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -27,8 +27,8 @@ const createEventEditDestinationsMarkup = (destination) => {
   );
 };
 
-const createEventEditOffersMarkup = (offers) => {
-  return offers.map((offer) => {
+const createEventEditOffersMarkup = (eventOffers) => {
+  return eventOffers.map((offer) => {
     const {name, type, price, checked} = offer;
     const checkStatus = checked ? `checked` : ``;
     return (
@@ -45,8 +45,8 @@ const createEventEditOffersMarkup = (offers) => {
   .join(`\n`);
 };
 
-const createEventEditDetailsMarkup = (event, destination) => {
-  const eventOffersMarkup = createEventEditOffersMarkup(event.offers);
+const createEventEditDetailsMarkup = (eventOffers, destination) => {
+  const eventOffersMarkup = createEventEditOffersMarkup(eventOffers);
   const eventDestinationsMarkup = createEventEditDestinationsMarkup(destination);
   return (
     `<section class="event__details">
@@ -69,7 +69,7 @@ const createdestinationsListMarkup = (destinations) => {
 
 const createEventEditTemplate = (event, options, destinations) => {
   const {dateStart, dateEnd, price, isFavorite} = event;
-  const {type, destination} = options;
+  const {type, destination, offers} = options;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(new Date(dateStart));
@@ -77,8 +77,8 @@ const createEventEditTemplate = (event, options, destinations) => {
   const destinationListMarkup = createdestinationsListMarkup(destinations);
   const favorite = isFavorite ? `checked` : ``;
 
-  const eventDestination = destinations.filter((dest) => dest.name === destination);
-  const eventDetailsMarkup = createEventEditDetailsMarkup(event, eventDestination);
+  const eventDestination = destinations.filter((dest) => dest.name === destination).pop();
+  const eventDetailsMarkup = createEventEditDetailsMarkup(offers, eventDestination);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -208,6 +208,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._event = event;
     this._eventType = event.type;
     this._eventDestination = event.destination;
+    this._eventOffers = event.offers;
 
     this._destinations = destinationsList;
 
@@ -223,7 +224,7 @@ export default class EventEdit extends AbstractSmartComponent {
   getTemplate() {
     return createEventEditTemplate(
         this._event,
-        {type: this._eventType, destination: this._eventDestination},
+        {type: this._eventType, destination: this._eventDestination, offers: this._eventOffers},
         this._destinations
     );
   }
@@ -250,6 +251,7 @@ export default class EventEdit extends AbstractSmartComponent {
     const eventTypeElement = element.querySelector(`.event__type-list`);
     eventTypeElement.addEventListener(`change`, () => {
       this._eventType = eventTypeElement.querySelector(`.event__type-input:checked`).value;
+      this._eventOffers = eventsOffers.filter((offer) => EVENT_OFFERS[this._eventType].indexOf(offer.type) !== -1);
       this.rerender();
     });
 
