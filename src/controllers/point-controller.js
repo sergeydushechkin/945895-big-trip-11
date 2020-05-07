@@ -27,7 +27,7 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyKeydown);
     });
 
-    this._eventEditComponent.setEventFavoriteButtinClickHandler((evt) => {
+    this._eventEditComponent.setFavoriteButtonClickHandler((evt) => {
       this._onDataChange(
           this,
           this._event,

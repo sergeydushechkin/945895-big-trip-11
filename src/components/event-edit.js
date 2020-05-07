@@ -212,6 +212,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._destinations = destinationsList;
 
     this._submitHandler = null;
+    this._favoriteButtonHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -232,12 +233,14 @@ export default class EventEdit extends AbstractSmartComponent {
     this._submitHandler = handler;
   }
 
-  setEventFavoriteButtinClickHandler(handler) {
+  setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+    this._favoriteButtonHandler = handler;
   }
 
   recoveryListeners() {
     this.setFormSubmitHandler(this._submitHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonHandler);
     this._subscribeOnEvents();
   }
 
