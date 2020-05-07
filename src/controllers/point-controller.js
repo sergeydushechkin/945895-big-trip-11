@@ -21,10 +21,14 @@ export default class PointController {
       document.addEventListener(`keydown`, this._onEscKeyKeydown);
     });
 
-    this._eventEditComponent.setFormSubmitHandler((evt) => {
-      evt.preventDefault();
+    this._eventEditComponent.setFormSubmitHandler((newEvent) => {
       this._replaceEventEditToEvent();
       document.removeEventListener(`keydown`, this._onEscKeyKeydown);
+      this._onDataChange(
+          this,
+          this._event,
+          newEvent
+      );
     });
 
     this._eventEditComponent.setFavoriteButtonClickHandler((evt) => {
