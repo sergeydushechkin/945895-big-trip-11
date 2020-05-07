@@ -1,4 +1,4 @@
-import {EVENT_TYPES} from "../const.js";
+import {EVENT_TYPES, EVENT_OFFERS} from "../const.js";
 import {getRandomArrayElement, getRandomIntegerNumber} from "../utils/common.js";
 
 export const cities = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `London`];
@@ -17,7 +17,7 @@ const descriptions = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const offers = [
+export const eventsOffers = [
   {
     name: `Order Uber`,
     type: `uber`,
@@ -81,23 +81,21 @@ const getRandomDate = (baseDate) => {
   return randomDate;
 };
 
-const generateEventOffers = () => {
-  let resultOffers = offers.map((offer) => Object.assign({}, offer));
-  for (let i = 0; i < getRandomIntegerNumber(0, 5); i++) {
-    resultOffers[getRandomIntegerNumber(0, resultOffers.length - 1)].checked = true;
-  }
-
-  return resultOffers;
+const generateEventOffers = (type) => {
+  return eventsOffers
+    .filter((offer) => EVENT_OFFERS[type].indexOf(offer.type) !== -1)
+    .map((offer) => Object.assign({}, offer, {checked: Math.random() > 0.4}));
 };
 
 const generateEvent = (dateStart, dateEnd) => {
+  const type = getRandomArrayElement(EVENT_TYPES);
   return {
-    type: getRandomArrayElement(EVENT_TYPES),
+    type,
     destination: getRandomArrayElement(destinationsList).name,
     dateStart,
     dateEnd,
     price: getRandomIntegerNumber(20, 200),
-    offers: generateEventOffers(),
+    offers: generateEventOffers(type),
     isFavorite: Math.random() > 0.5
   };
 };
