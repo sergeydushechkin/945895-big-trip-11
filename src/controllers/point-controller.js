@@ -3,16 +3,23 @@ import EventEditComponent from "../components/event-edit.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._event = null;
     this._eventComponent = null;
     this._eventEditComponent = null;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
+    this._editMode = null;
   }
 
   render(event) {
     this._event = event;
+
+    const oldEventComponent = this._eventComponent;
+    const oldEventEditComponent = this._eventEditComponent;
+
     this._eventComponent = new EventComponent(this._event);
     this._eventEditComponent = new EventEditComponent(this._event);
 
@@ -39,15 +46,30 @@ export default class PointController {
       );
     });
 
-    render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    if (oldEventComponent && oldEventEditComponent) {
+      replace(this._eventComponent, oldEventComponent);
+      replace(this._eventEditComponent, oldEventEditComponent);
+    } else {
+      render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    }
   }
 
   _replaceEventToEventEdit() {
+    this._onViewChange();
     replace(this._eventEditComponent, this._eventComponent);
+    this._editMode = true;
   }
 
   _replaceEventEditToEvent() {
+    this._eventEditComponent.reset();
     replace(this._eventComponent, this._eventEditComponent);
+    this._editMode = false;
+  }
+
+  setDefaultView() {
+    if (this._editMode === true) {
+      this._replaceEventEditToEvent();
+    }
   }
 
   _onEscKeyKeydown(evt) {

@@ -221,6 +221,13 @@ export default class EventEdit extends AbstractSmartComponent {
     super.rerender();
   }
 
+  reset() {
+    this._eventType = this._event.type;
+    this._eventDestination = this._event.destination;
+    this._eventOffers = this._event.offers;
+    this.rerender();
+  }
+
   getTemplate() {
     return createEventEditTemplate(
         this._event,
