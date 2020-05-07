@@ -28,21 +28,17 @@ export default class PointController {
       document.addEventListener(`keydown`, this._onEscKeyKeydown);
     });
 
-    this._eventEditComponent.setFormSubmitHandler((newEvent) => {
+    this._eventEditComponent.setFormSubmitHandler((evt) => {
+      evt.preventDefault();
       this._replaceEventEditToEvent();
       document.removeEventListener(`keydown`, this._onEscKeyKeydown);
-      this._onDataChange(
-          this,
-          this._event,
-          newEvent
-      );
     });
 
-    this._eventEditComponent.setFavoriteButtonClickHandler((evt) => {
+    this._eventEditComponent.setFavoriteButtonClickHandler(() => {
       this._onDataChange(
           this,
           this._event,
-          Object.assign({}, this._event, {isFavorite: evt.target.checked})
+          Object.assign({}, this._event, {isFavorite: !this._event.isFavorite})
       );
     });
 

@@ -13,17 +13,54 @@ export const EVENT_PREP = {
   [`restaurant`]: `in`
 };
 
-export const EVENT_OFFERS = {
-  [`taxi`]: [`uber`, `comfort`],
-  [`bus`]: [`comfort`, `luggage`],
-  [`train`]: [`comfort`, `breakfast`],
-  [`ship`]: [`comfort`, `luggage`, `breakfast`],
-  [`transport`]: [`luggage`, `breakfast`],
-  [`drive`]: [`car`],
-  [`flight`]: [`luggage`, `breakfast`],
-  [`check-in`]: [`luggage`, `breakfast`],
-  [`sightseeing`]: [`car`, `uber`],
-  [`restaurant`]: []
+export const OFFERS = {
+  taxi:
+  [
+    {name: `Order Uber`, price: 20},
+    {name: `Switch to comfort class`, price: 80}
+  ],
+  bus:
+  [
+    {name: `Add luggage`, price: 50},
+    {name: `Switch to comfort class`, price: 80}
+  ],
+  train:
+  [
+    {name: `Switch to comfort class`, price: 80},
+    {name: `Add breakfast`, price: 50}
+  ],
+  ship:
+  [
+    {name: `Add luggage`, price: 50},
+    {name: `Switch to comfort class`, price: 80},
+    {name: `Add breakfast`, price: 50}
+  ],
+  transport:
+  [
+    {name: `Add luggage`, price: 50},
+    {name: `Add breakfast`, price: 50}
+  ],
+  drive:
+  [
+    {name: `Rent a car`, price: 200}
+  ],
+  flight:
+  [
+    {name: `Add luggage`, price: 50},
+    {name: `Add breakfast`, price: 50}
+  ],
+  [`check-in`]:
+  [
+    {name: `Add luggage`, price: 50},
+    {name: `Add breakfast`, price: 50}
+  ],
+  sightseeing:
+  [
+    {name: `Order Uber`, price: 20},
+    {name: `Rent a car`, price: 200},
+  ],
+  restaurant:
+  []
 };
 
 export const MONTH_NAMES = [

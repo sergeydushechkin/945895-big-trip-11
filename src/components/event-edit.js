@@ -1,7 +1,7 @@
-import {EVENT_PREP, EVENT_OFFERS} from "../const.js";
+import {EVENT_PREP, OFFERS} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {destinationsList, eventsOffers} from "../mock/event.js";
+import {destinationsList} from "../mock/event.js";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -29,11 +29,11 @@ const createEventEditDestinationsMarkup = (destination) => {
 
 const createEventEditOffersMarkup = (eventOffers) => {
   return eventOffers.map((offer) => {
-    const {name, type, price, checked} = offer;
-    const checkStatus = checked ? `checked` : ``;
+    const {name, price} = offer;
+    const type = name.replace(/\s+/g, ``);
     return (
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}" data-offer-type="${type}" ${checkStatus}>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}" data-offer-type="${type}" >
         <label class="event__offer-label" for="event-offer-${type}-1">
           <span class="event__offer-title">${name}</span>
           &plus;
@@ -237,26 +237,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setFormSubmitHandler(handler) {
-    // this.getElement().addEventListener(`submit`, handler);
-    this.getElement().addEventListener(`submit`, (evt) => {
-      evt.preventDefault();
-
-      // Выбирает выделенные опции и преобразует в массив с названиями типов из data-offer-type
-      const checkedOffersTypes = Array.from(this._element.querySelectorAll(`.event__offer-checkbox:checked`))
-        .map((element) => element.dataset.offerType);
-
-      // Создает массив с учетом выбранных опций
-      this._eventOffers = this._eventOffers
-        .map((offer) => checkedOffersTypes.indexOf(offer.type) === -1 ? offer : Object.assign({}, offer, {checked: true}));
-
-      const newEvent = Object.assign(
-          {},
-          this._event,
-          {type: this._eventType, destination: this._eventDestination, offers: this._eventOffers}
-      );
-
-      handler(newEvent);
-    });
+    this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
   }
 
@@ -274,10 +255,9 @@ export default class EventEdit extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    const eventTypeElement = element.querySelector(`.event__type-list`);
-    eventTypeElement.addEventListener(`change`, () => {
-      this._eventType = eventTypeElement.querySelector(`.event__type-input:checked`).value;
-      this._eventOffers = eventsOffers.filter((offer) => EVENT_OFFERS[this._eventType].indexOf(offer.type) !== -1);
+    element.querySelector(`.event__type-list`).addEventListener(`change`, () => {
+      this._eventType = element.querySelector(`.event__type-list`).querySelector(`.event__type-input:checked`).value;
+      this._eventOffers = OFFERS[this._eventType];
       this.rerender();
     });
 
