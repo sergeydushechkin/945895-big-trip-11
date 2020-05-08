@@ -14,7 +14,7 @@ const createOfferMarkup = (offer) => {
 };
 
 const createOffersTemplate = (offers) => {
-  const offersMarkup = offers.map((offer) => offer.checked ? createOfferMarkup(offer) : ``).join(`\n`);
+  const offersMarkup = offers.map((offer) => createOfferMarkup(offer)).join(`\n`);
   return (
     `<ul class="event__selected-offers">
       ${offersMarkup}
@@ -39,7 +39,7 @@ const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination.name}</h3>
+        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

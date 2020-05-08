@@ -2,14 +2,13 @@ import TripCostComponent from "./components/cost.js";
 import TripInfoComponent from "./components/info.js";
 import MenuComponent from "./components/menu.js";
 import FilterComponent from "./components/filter.js";
-import {generateEvents, getDestinations} from "./mock/event.js";
+import {generateEvents} from "./mock/event.js";
 import {RenderPosition, render} from "./utils/render.js";
 import TripController from "./controllers/trip-controller.js";
 
 const EVENTS_COUNT = 20;
 
-const destinationList = getDestinations();
-const events = generateEvents(EVENTS_COUNT, destinationList);
+const events = generateEvents(EVENTS_COUNT);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 
@@ -43,4 +42,4 @@ render(
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripController = new TripController(tripEventsElement);
 
-tripController.render(events, destinationList);
+tripController.render(events);

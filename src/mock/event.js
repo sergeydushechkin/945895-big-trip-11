@@ -1,4 +1,4 @@
-import {EVENT_TYPES} from "../const.js";
+import {EVENT_TYPES, OFFERS} from "../const.js";
 import {getRandomArrayElement, getRandomIntegerNumber} from "../utils/common.js";
 
 export const cities = [`Amsterdam`, `Chamonix`, `Geneva`, `Moscow`, `London`];
@@ -15,39 +15,6 @@ const descriptions = [
   `Aliquam erat volutpat.`,
   `Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus.`
-];
-
-const offers = [
-  {
-    name: `Order Uber`,
-    type: `uber`,
-    price: 20,
-    checked: false
-  },
-  {
-    name: `Add luggage`,
-    type: `luggage`,
-    price: 50,
-    checked: false
-  },
-  {
-    name: `Switch to comfort class`,
-    type: `comfort`,
-    price: 80,
-    checked: false
-  },
-  {
-    name: `Rent a car`,
-    type: `car`,
-    price: 200,
-    checked: false
-  },
-  {
-    name: `Add breakfast`,
-    type: `breakfast`,
-    price: 50,
-    checked: false
-  }
 ];
 
 export const getDestinations = () => {
@@ -81,28 +48,30 @@ const getRandomDate = (baseDate) => {
   return randomDate;
 };
 
-const generateEventOffers = () => {
-  let resultOffers = offers.map((offer) => Object.assign({}, offer));
-  for (let i = 0; i < getRandomIntegerNumber(0, 5); i++) {
-    resultOffers[getRandomIntegerNumber(0, resultOffers.length - 1)].checked = true;
-  }
-
-  return resultOffers;
+const generateEventOffers = (type) => {
+  let eventOffers = [];
+  OFFERS[type].forEach((offer) => {
+    if (Math.random() > 0.5) {
+      eventOffers.push(Object.assign({}, offer));
+    }
+  });
+  return eventOffers;
 };
 
-const generateEvent = (destinationsList, dateStart, dateEnd) => {
+const generateEvent = (dateStart, dateEnd) => {
+  const type = getRandomArrayElement(EVENT_TYPES);
   return {
-    type: getRandomArrayElement(EVENT_TYPES),
-    destination: getRandomArrayElement(destinationsList),
+    type,
+    destination: getRandomArrayElement(destinationsList).name,
     dateStart,
     dateEnd,
     price: getRandomIntegerNumber(20, 200),
-    offers: generateEventOffers(),
+    offers: generateEventOffers(type),
     isFavorite: Math.random() > 0.5
   };
 };
 
-export const generateEvents = (count, destinationsList) => {
+export const generateEvents = (count) => {
   let firstDate = getRandomDate();
   let secondDate = getRandomDate(firstDate);
   return new Array(count)
@@ -110,7 +79,9 @@ export const generateEvents = (count, destinationsList) => {
     .map(() => {
       firstDate = secondDate + (getRandomIntegerNumber(5, 60) * 60 * 1000);
       secondDate = getRandomDate(firstDate);
-      return generateEvent(destinationsList, firstDate, secondDate);
+      return generateEvent(firstDate, secondDate);
     })
     .sort((a, b) => a.dateStart > b.dateStart ? 1 : -1);
 };
+
+export const destinationsList = getDestinations();

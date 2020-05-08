@@ -10,7 +10,7 @@ const createDayTemplate = (dayDate, count) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${count}</span>
+        <span class="day__counter">${dayDate ? count : ` `}</span>
         <time class="day__date" datetime="${dateRev}">${monthDay}</time>
       </div>
       <ul class="trip-events__list">
