@@ -2,6 +2,9 @@ import {EVENT_PREP, OFFERS} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {destinationsList} from "../mock/event.js";
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const createEventEditPhotosMarkup = (photos) => {
   const photosElements = photos.map((path) => `<img class="event__photo" src="${path}" alt="Event photo">`).join(`\n`);
@@ -216,11 +219,19 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._submitHandler = null;
     this._favoriteButtonHandler = null;
+    this._flatpickrStartTime = null;
+    this._flatpickrEndTime = null;
+
+    this._eventStartTimeElementChangeHandler = this._eventStartTimeElementChangeHandler.bind(this);
+
     this._subscribeOnEvents();
+    this._applyFlatpickr();
   }
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -267,5 +278,41 @@ export default class EventEdit extends AbstractSmartComponent {
       this._eventDestination = evt.target.value;
       this.rerender();
     });
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickrStartTime) {
+      this._flatpickrStartTime.destroy();
+      this._flatpickrStartTime = null;
+    }
+
+    if (this._flatpickrEndTime) {
+      this._flatpickrEndTime.destroy();
+      this._flatpickrEndTime = null;
+    }
+
+    const eventStartTimeElement = this.getElement().querySelector(`.event__input--time#event-start-time-1`);
+    const eventEndTimeElement = this.getElement().querySelector(`.event__input--time#event-end-time-1`);
+    const flatpickrOptions = {
+      enableTime: true,
+      dateFormat: `d/m/y H:i`,
+      allowInput: false,
+      time_24hr: true // eslint-disable-line
+    };
+
+    this._flatpickrStartTime = flatpickr(eventStartTimeElement, Object.assign({}, flatpickrOptions, {
+      defaultDate: this._event.dateStart || `today`,
+    }));
+
+    this._flatpickrEndTime = flatpickr(eventEndTimeElement, Object.assign({}, flatpickrOptions, {
+      defaultDate: this._event.dateEnd || `today`,
+      minDate: this._event.dateStart
+    }));
+
+    eventStartTimeElement.addEventListener(`change`, this._eventStartTimeElementChangeHandler);
+  }
+
+  _eventStartTimeElementChangeHandler() {
+    this._flatpickrEndTime.set(`minDate`, this._flatpickrStartTime.input.value);
   }
 }

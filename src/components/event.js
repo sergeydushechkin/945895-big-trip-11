@@ -27,7 +27,7 @@ const createEventTemplate = (event) => {
 
   const eventTypeName = capitalizeFirstLetter(type);
   const offersList = offers ? createOffersTemplate(offers) : ``;
-  const duration = formatDuration(new Date(dateEnd - dateStart));
+  const duration = formatDuration(new Date(dateStart), new Date(dateEnd));
   const dateStartMarkup = new Date(dateStart).toISOString();
   const dateEndMarkup = new Date(dateEnd).toISOString();
   const timeStart = formatTime(new Date(dateStart));
