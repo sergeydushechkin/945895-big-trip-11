@@ -1,10 +1,10 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createTripCostTemplate = (events) => {
-  const cost = events.length ?
-    events
-      .reduce((totalCost, event) => {
-        return totalCost + event.price;
+const createTripCostTemplate = (points) => {
+  const cost = points.length ?
+    points
+      .reduce((totalCost, point) => {
+        return totalCost + point.price;
       }, 0)
     : 0;
 
@@ -18,13 +18,13 @@ const createTripCostTemplate = (events) => {
 };
 
 export default class Cost extends AbstractComponent {
-  constructor(events) {
+  constructor(points) {
     super();
 
-    this._events = events;
+    this._points = points;
   }
 
   getTemplate() {
-    return createTripCostTemplate(this._events);
+    return createTripCostTemplate(this._points);
   }
 }

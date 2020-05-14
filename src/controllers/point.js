@@ -5,7 +5,7 @@ import {RenderPosition, render, replace} from "../utils/render.js";
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
-    this._event = null;
+    this._point = null;
     this._eventComponent = null;
     this._eventEditComponent = null;
     this._onDataChange = onDataChange;
@@ -14,14 +14,14 @@ export default class PointController {
     this._editMode = null;
   }
 
-  render(event) {
-    this._event = event;
+  render(point) {
+    this._point = point;
 
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
 
-    this._eventComponent = new EventComponent(this._event);
-    this._eventEditComponent = new EventEditComponent(this._event);
+    this._eventComponent = new EventComponent(this._point);
+    this._eventEditComponent = new EventEditComponent(this._point);
 
     this._eventComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEventEdit();
@@ -37,8 +37,8 @@ export default class PointController {
     this._eventEditComponent.setFavoriteButtonClickHandler(() => {
       this._onDataChange(
           this,
-          this._event,
-          Object.assign({}, this._event, {isFavorite: !this._event.isFavorite})
+          this._point,
+          Object.assign({}, this._point, {isFavorite: !this._point.isFavorite})
       );
     });
 

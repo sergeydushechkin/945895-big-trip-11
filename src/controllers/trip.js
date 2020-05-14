@@ -4,12 +4,12 @@ import DayComponent from "../components/day.js";
 import NoEventsComponent from "../components/no-events.js";
 import {RenderPosition, render} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
-import PointController from "./point-controller.js";
+import PointController from "./point.js";
 
-const renderEvents = (daysListComponent, events, isDefaultSorting, onDataChange, onViewChange) => {
+const renderEvents = (daysListComponent, points, isDefaultSorting, onDataChange, onViewChange) => {
   let pointControllers = [];
   const dates = isDefaultSorting
-    ? Array.from(new Set(events.map((event) => formatDateReverse(new Date(event.dateStart)))))
+    ? Array.from(new Set(points.map((point) => formatDateReverse(new Date(point.dateStart)))))
     : [true];
 
   dates.forEach((date, index) => {
@@ -19,11 +19,11 @@ const renderEvents = (daysListComponent, events, isDefaultSorting, onDataChange,
 
     const eventsListElement = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-    pointControllers.push(...events
-      .filter((event) => isDefaultSorting ? formatDateReverse(new Date(event.dateStart)) === date : true)
-      .map((event) => {
+    pointControllers.push(...points
+      .filter((point) => isDefaultSorting ? formatDateReverse(new Date(point.dateStart)) === date : true)
+      .map((point) => {
         const pointController = new PointController(eventsListElement, onDataChange, onViewChange);
-        pointController.render(event);
+        pointController.render(point);
         return pointController;
       })
     );
@@ -34,28 +34,28 @@ const renderEvents = (daysListComponent, events, isDefaultSorting, onDataChange,
   return pointControllers;
 };
 
-const getSortedEvents = (events, sortType) => {
-  let sortedEvents = [];
+const getSortedEvents = (points, sortType) => {
+  let sortedPoints = [];
 
   switch (sortType) {
     case SortType.EVENT:
-      sortedEvents = events;
+      sortedPoints = points;
       break;
     case SortType.TIME:
-      sortedEvents = events.slice().sort((a, b) => (b.dateEnd - b.dateStart) - (a.dateEnd - a.dateStart));
+      sortedPoints = points.slice().sort((a, b) => (b.dateEnd - b.dateStart) - (a.dateEnd - a.dateStart));
       break;
     case SortType.PRICE:
-      sortedEvents = events.slice().sort((a, b) => b.price - a.price);
+      sortedPoints = points.slice().sort((a, b) => b.price - a.price);
       break;
   }
 
-  return sortedEvents;
+  return sortedPoints;
 };
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, pointsModel) {
     this._container = container;
-    this._events = [];
+    this._pointsModel = pointsModel;
     this._pointControllers = [];
 
     this._noEventsComponent = new NoEventsComponent();
@@ -69,32 +69,30 @@ export default class TripController {
     this._onViewChange = this._onViewChange.bind(this);
   }
 
-  render(events) {
-    if (!events.length) {
+  render() {
+    if (!this._pointsModel.getPoints().length) {
       render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    this._events = events;
 
     // Отрисовка основной части с сортировкой
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
 
     // Отрисовка событий
-    this._pointControllers = renderEvents(this._daysListComponent, this._events, true, this._onDataChange, this._onViewChange);
+    this._pointControllers = renderEvents(this._daysListComponent, this._pointsModel.getPoints(), true, this._onDataChange, this._onViewChange);
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
-  _onDataChange(pointController, oldEvent, newEvent) {
-    const index = this._events.indexOf(oldEvent);
+  _onDataChange(pointController, oldData, newData) {
+    const index = this._pointsModel.getPoints().indexOf(oldData);
 
     if (index === -1) {
       return;
     }
 
-    this._events[index] = newEvent;
+    this._pointsModel.updatePoint(oldData.id, newData);
 
-    pointController.render(this._events[index]);
+    pointController.render(this._pointsModel.getPoints()[index]);
   }
 
   _onViewChange() {
@@ -105,7 +103,7 @@ export default class TripController {
     this._daysListComponent.getElement().innerHTML = ``;
     this._pointControllers = renderEvents(
         this._daysListComponent,
-        getSortedEvents(this._events, sortType),
+        getSortedEvents(this._pointsModel.getPoints(), sortType),
         sortType === SortType.EVENT,
         this._onDataChange,
         this._onViewChange

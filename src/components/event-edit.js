@@ -1,7 +1,7 @@
 import {EVENT_PREP, OFFERS} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {destinationsList} from "../mock/event.js";
+import {destinationsList} from "../mock/point.js";
 import flatpickr from "flatpickr";
 
 import "flatpickr/dist/flatpickr.min.css";
@@ -30,8 +30,8 @@ const createEventEditDestinationsMarkup = (destination) => {
   );
 };
 
-const createEventEditOffersMarkup = (eventOffers) => {
-  return eventOffers.map((offer) => {
+const createEventEditOffersMarkup = (pointOffers) => {
+  return pointOffers.map((offer) => {
     const {name, price} = offer;
     const type = name.replace(/\s+/g, ``);
     return (
@@ -48,8 +48,8 @@ const createEventEditOffersMarkup = (eventOffers) => {
   .join(`\n`);
 };
 
-const createEventEditDetailsMarkup = (eventOffers, destination) => {
-  const eventOffersMarkup = createEventEditOffersMarkup(eventOffers);
+const createEventEditDetailsMarkup = (pointOffers, destination) => {
+  const eventOffersMarkup = createEventEditOffersMarkup(pointOffers);
   const eventDestinationsMarkup = createEventEditDestinationsMarkup(destination);
   return (
     `<section class="event__details">
@@ -70,8 +70,8 @@ const createdestinationsListMarkup = (destinations) => {
   return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
-const createEventEditTemplate = (event, options, destinations) => {
-  const {dateStart, dateEnd, price, isFavorite} = event;
+const createEventEditTemplate = (point, options, destinations) => {
+  const {dateStart, dateEnd, price, isFavorite} = point;
   const {type, destination, offers} = options;
 
   const eventTypeName = capitalizeFirstLetter(type);
@@ -207,13 +207,13 @@ const createEventEditTemplate = (event, options, destinations) => {
 };
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(point) {
     super();
 
-    this._event = event;
-    this._eventType = event.type;
-    this._eventDestination = event.destination;
-    this._eventOffers = event.offers;
+    this._point = point;
+    this._pointType = point.type;
+    this._pointDestination = point.destination;
+    this._pointOffers = point.offers;
 
     this._destinations = destinationsList;
 
@@ -235,16 +235,16 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   reset() {
-    this._eventType = this._event.type;
-    this._eventDestination = this._event.destination;
-    this._eventOffers = this._event.offers;
+    this._pointType = this._point.type;
+    this._pointDestination = this._point.destination;
+    this._pointOffers = this._point.offers;
     this.rerender();
   }
 
   getTemplate() {
     return createEventEditTemplate(
-        this._event,
-        {type: this._eventType, destination: this._eventDestination, offers: this._eventOffers},
+        this._point,
+        {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers},
         this._destinations
     );
   }
@@ -269,13 +269,13 @@ export default class EventEdit extends AbstractSmartComponent {
     const element = this.getElement();
 
     element.querySelector(`.event__type-list`).addEventListener(`change`, () => {
-      this._eventType = element.querySelector(`.event__type-list`).querySelector(`.event__type-input:checked`).value;
-      this._eventOffers = OFFERS[this._eventType];
+      this._pointType = element.querySelector(`.event__type-list`).querySelector(`.event__type-input:checked`).value;
+      this._pointOffers = OFFERS[this._pointType];
       this.rerender();
     });
 
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      this._eventDestination = evt.target.value;
+      this._pointDestination = evt.target.value;
       this.rerender();
     });
   }
@@ -301,12 +301,12 @@ export default class EventEdit extends AbstractSmartComponent {
     };
 
     this._flatpickrStartTime = flatpickr(eventStartTimeElement, Object.assign({}, flatpickrOptions, {
-      defaultDate: this._event.dateStart || `today`,
+      defaultDate: this._point.dateStart || `today`,
     }));
 
     this._flatpickrEndTime = flatpickr(eventEndTimeElement, Object.assign({}, flatpickrOptions, {
-      defaultDate: this._event.dateEnd || `today`,
-      minDate: this._event.dateStart
+      defaultDate: this._point.dateEnd || `today`,
+      minDate: this._point.dateStart
     }));
 
     eventStartTimeElement.addEventListener(`change`, this._eventStartTimeElementChangeHandler);
