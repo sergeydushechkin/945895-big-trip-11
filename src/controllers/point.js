@@ -1,6 +1,6 @@
 import EventComponent from "../components/event.js";
 import EventEditComponent from "../components/event-edit.js";
-import {RenderPosition, render, replace} from "../utils/render.js";
+import {RenderPosition, render, replace, remove} from "../utils/render.js";
 
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
@@ -48,6 +48,12 @@ export default class PointController {
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  destroy() {
+    remove(this._eventComponent);
+    remove(this._eventEditComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyKeydown);
   }
 
   _replaceEventToEventEdit() {

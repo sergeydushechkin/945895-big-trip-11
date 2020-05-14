@@ -42,7 +42,7 @@ const getRandomDate = (baseDate) => {
   if (baseDate) {
     randomDate = baseDate + Math.round((60 * 60 * getRandomIntegerNumber(0.4, 10) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
   } else {
-    randomDate = Date.now() + Math.round((60 * 60 * getRandomIntegerNumber(1, 24) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
+    randomDate = Date.now() - Math.round((60 * 60 * getRandomIntegerNumber(7, 32) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
   }
 
   return randomDate;

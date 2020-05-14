@@ -13,6 +13,12 @@ export const EVENT_PREP = {
   [`restaurant`]: `in`
 };
 
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
 export const OFFERS = {
   taxi:
   [

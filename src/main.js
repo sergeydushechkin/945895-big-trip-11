@@ -1,7 +1,7 @@
 import TripCostComponent from "./components/cost.js";
 import TripInfoComponent from "./components/info.js";
 import MenuComponent from "./components/menu.js";
-import FilterComponent from "./components/filter.js";
+import FilterController from "./controllers/filter.js";
 import {generatePoints} from "./mock/point.js";
 import {RenderPosition, render} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
@@ -35,11 +35,9 @@ render(
     new MenuComponent(),
     RenderPosition.AFTEREND
 );
-render(
-    tripMainControlsElement.querySelector(`h2:nth-of-type(2)`),
-    new FilterComponent(),
-    RenderPosition.AFTEREND
-);
+
+const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
+filterController.render();
 
 // Отрисовка основной части
 const tripEventsElement = document.querySelector(`.trip-events`);
