@@ -249,6 +249,12 @@ export default class EventEdit extends AbstractSmartComponent {
     );
   }
 
+  removeElement() {
+    super.removeElement();
+
+    this._removeFlatpickr();
+  }
+
   setFormSubmitHandler(handler) {
     this.getElement().querySelector(`form.event--edit`).addEventListener(`submit`, handler);
     this._submitHandler = handler;
@@ -281,15 +287,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-    if (this._flatpickrStartTime) {
-      this._flatpickrStartTime.destroy();
-      this._flatpickrStartTime = null;
-    }
-
-    if (this._flatpickrEndTime) {
-      this._flatpickrEndTime.destroy();
-      this._flatpickrEndTime = null;
-    }
+    this._removeFlatpickr();
 
     const eventStartTimeElement = this.getElement().querySelector(`.event__input--time#event-start-time-1`);
     const eventEndTimeElement = this.getElement().querySelector(`.event__input--time#event-end-time-1`);
@@ -310,6 +308,18 @@ export default class EventEdit extends AbstractSmartComponent {
     }));
 
     eventStartTimeElement.addEventListener(`change`, this._eventStartTimeElementChangeHandler);
+  }
+
+  _removeFlatpickr() {
+    if (this._flatpickrStartTime) {
+      this._flatpickrStartTime.destroy();
+      this._flatpickrStartTime = null;
+    }
+
+    if (this._flatpickrEndTime) {
+      this._flatpickrEndTime.destroy();
+      this._flatpickrEndTime = null;
+    }
   }
 
   _eventStartTimeElementChangeHandler() {
