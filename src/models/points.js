@@ -21,14 +21,31 @@ export default class Points {
     this._points = points;
   }
 
+  addPoint(data) {
+    data.id = Date.now().toString() + Math.random();
+    this._points.push(data);
+  }
+
   updatePoint(id, newData) {
-    const pointIndex = this._points.findIndex((point) => point.id === id);
+    const pointIndex = this._findPointIndex(id);
 
     if (pointIndex === -1) {
       return false;
     }
 
     this._points[pointIndex] = newData;
+
+    return true;
+  }
+
+  removePoint(id) {
+    const pointIndex = this._findPointIndex(id);
+
+    if (pointIndex === -1) {
+      return false;
+    }
+
+    this._points = [].concat(this._points.slice(0, pointIndex), this._points.slice(pointIndex + 1));
 
     return true;
   }
@@ -44,5 +61,9 @@ export default class Points {
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
+  }
+
+  _findPointIndex(id) {
+    return this._points.findIndex((point) => point.id === id);
   }
 }

@@ -186,7 +186,7 @@ const createEventEditTemplate = (point, options, destinations) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Cancel</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
 
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favorite}>
           <label class="event__favorite-btn" for="event-favorite-1">
@@ -218,6 +218,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._destinations = destinationsList;
 
     this._submitHandler = null;
+    this._resetHandler = null;
     this._favoriteButtonHandler = null;
     this._flatpickrStartTime = null;
     this._flatpickrEndTime = null;
@@ -260,6 +261,11 @@ export default class EventEdit extends AbstractSmartComponent {
     this._submitHandler = handler;
   }
 
+  setFormResetHandler(handler) {
+    this.getElement().querySelector(`form.event--edit`).addEventListener(`reset`, handler);
+    this._resetHandler = handler;
+  }
+
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
     this._favoriteButtonHandler = handler;
@@ -267,6 +273,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setFormSubmitHandler(this._submitHandler);
+    this.setFormResetHandler(this._ResetHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonHandler);
     this._subscribeOnEvents();
   }
