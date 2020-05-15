@@ -2,7 +2,7 @@ import SortComponent, {SortType} from "../components/sort.js";
 import DaysListComponent from "../components/days-list.js";
 import DayComponent from "../components/day.js";
 import NoEventsComponent from "../components/no-events.js";
-import {RenderPosition, render, remove} from "../utils/render.js";
+import {RenderPosition, render, replace} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
 import PointController from "./point.js";
 
@@ -80,9 +80,16 @@ export default class TripController {
   }
 
   _renderSort() {
+    const oldSortComponent = this._sortComponent;
     this._sortComponent = new SortComponent();
+
+    if (oldSortComponent) {
+      replace(this._sortComponent, oldSortComponent);
+    } else {
+      render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    }
+
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChangeHandler);
-    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderEvents() {
@@ -100,8 +107,6 @@ export default class TripController {
   _removeEvents() {
     this._pointControllers.forEach((pointController) => pointController.destroy());
     this._pointControllers = [];
-
-    remove(this._sortComponent);
 
     this._daysListComponent.getElement().innerHTML = ``;
   }
