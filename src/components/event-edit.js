@@ -3,6 +3,7 @@ import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {destinationsList} from "../mock/point.js";
 import flatpickr from "flatpickr";
+import {Mode as PointControllerMode} from "../controllers/point.js";
 
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -70,7 +71,7 @@ const createdestinationsListMarkup = (destinations) => {
   return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(`\n`);
 };
 
-const createEventEditTemplate = (point, options, destinations) => {
+const createEventEditTemplate = (point, mode, options, destinations) => {
   const {dateStart, dateEnd, price, isFavorite} = point;
   const {type, destination, offers} = options;
 
@@ -84,8 +85,8 @@ const createEventEditTemplate = (point, options, destinations) => {
   const eventDetailsMarkup = createEventEditDetailsMarkup(offers, eventDestination);
 
   return (
-    `<li class="trip-events__item">
-      <form class="event  event--edit" action="#" method="post">
+    `${mode !== PointControllerMode.ADDING ? `<li class="trip-events__item">` : ``}
+      <form class="${mode !== PointControllerMode.ADDING ? `` : `trip-events__item `}event  event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -186,8 +187,9 @@ const createEventEditTemplate = (point, options, destinations) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">${mode !== PointControllerMode.ADDING ? `Delete` : `Cancel`}</button>
 
+          ${mode !== PointControllerMode.ADDING ? `
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favorite}>
           <label class="event__favorite-btn" for="event-favorite-1">
             <span class="visually-hidden">Add to favorite</span>
@@ -198,18 +200,19 @@ const createEventEditTemplate = (point, options, destinations) => {
 
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
-          </button>
+          </button>` : ``}
         </header>
         ${eventDetailsMarkup}
       </form>
-    </li>`
+      ${mode !== PointControllerMode.ADDING ? `</li>` : ``}`
   );
 };
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(point) {
+  constructor(point, mode) {
     super();
 
+    this._mode = mode;
     this._point = point;
     this._pointType = point.type;
     this._pointDestination = point.destination;
@@ -245,6 +248,7 @@ export default class EventEdit extends AbstractSmartComponent {
   getTemplate() {
     return createEventEditTemplate(
         this._point,
+        this._mode,
         {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers},
         this._destinations
     );
@@ -273,7 +277,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setFormSubmitHandler(this._submitHandler);
-    this.setFormResetHandler(this._ResetHandler);
+    this.setFormResetHandler(this._resetHandler);
     this.setFavoriteButtonClickHandler(this._favoriteButtonHandler);
     this._subscribeOnEvents();
   }

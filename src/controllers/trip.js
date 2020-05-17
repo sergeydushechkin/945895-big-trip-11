@@ -22,8 +22,8 @@ const renderEvents = (daysListComponent, points, isDefaultSorting, onDataChange,
     pointControllers.push(...points
       .filter((point) => isDefaultSorting ? formatDateReverse(new Date(point.dateStart)) === date : true)
       .map((point) => {
-        const pointController = new PointController(eventsListElement, onDataChange, onViewChange);
-        pointController.render(point, PointControllerMode.DEFAULT);
+        const pointController = new PointController(eventsListElement, onDataChange, onViewChange, PointControllerMode.DEFAULT);
+        pointController.render(point);
         return pointController;
       })
     );
@@ -74,27 +74,6 @@ export default class TripController {
 
   render() {
     // Отрисовка основной части с сортировкой
-    this._renderSort();
-
-    // Отрисовка событий
-    this._renderEvents();
-  }
-
-  addNewPoint() {
-    if (this._addingNewPoint) {
-      return;
-    }
-
-    this._addingNewPoint = new PointController(
-        this._daysListComponent,
-        this._onDataChange,
-        this._onViewChange
-    );
-
-    this._addingNewPoint.render(EmptyPoint, PointControllerMode.ADDING);
-  }
-
-  _renderSort() {
     const oldSortComponent = this._sortComponent;
     this._sortComponent = new SortComponent();
 
@@ -105,18 +84,30 @@ export default class TripController {
     }
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChangeHandler);
-  }
 
-  _renderEvents() {
-    const points = this._pointsModel.getPoints();
-
+    // Отрисовка событий
     if (!this._pointsModel.getPointsAll().length) {
       render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    this._pointControllers = renderEvents(this._daysListComponent, points, true, this._onDataChange, this._onViewChange);
+    this._pointControllers = renderEvents(this._daysListComponent, this._pointsModel.getPoints(), true, this._onDataChange, this._onViewChange);
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
+  }
+
+  addNewPoint() {
+    if (this._addingNewPoint) {
+      return;
+    }
+
+    this._addingNewPoint = new PointController(
+        this._daysListComponent,
+        this._onDataChange,
+        this._onViewChange,
+        PointControllerMode.ADDING
+    );
+
+    this._addingNewPoint.render(EmptyPoint);
   }
 
   _removeEvents() {
@@ -148,7 +139,7 @@ export default class TripController {
     if (oldData !== null && newData !== null) {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
       if (isSuccess) {
-        pointController.render(newData);
+        pointController.render(newData, PointControllerMode.DEFAULT);
       }
     }
   }
@@ -162,7 +153,7 @@ export default class TripController {
   }
 
   _onSortTypeChangeHandler(sortType) {
-    this._daysListComponent.getElement().innerHTML = ``;
+    this._removeEvents();
     this._pointControllers = renderEvents(
         this._daysListComponent,
         getSortedEvents(this._pointsModel.getPoints(), sortType),

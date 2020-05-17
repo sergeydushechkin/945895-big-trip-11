@@ -21,7 +21,7 @@ export const EmptyPoint = {
 };
 
 export default class PointController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, mode) {
     this._container = container;
     this._point = null;
     this._eventComponent = null;
@@ -29,20 +29,19 @@ export default class PointController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
-    this._mode = Mode.DEFAULT;
+    this._mode = mode;
 
     this._onEscKeyKeydown = this._onEscKeyKeydown.bind(this);
   }
 
-  render(point, mode) {
+  render(point) {
     this._point = point;
-    this._mode = mode;
 
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventComponent(this._point);
-    this._eventEditComponent = new EventEditComponent(this._point);
+    this._eventEditComponent = new EventEditComponent(this._point, this._mode);
 
     this._eventComponent.setRollupButtonClickHandler(() => {
       this._replaceEventToEventEdit();
@@ -69,17 +68,28 @@ export default class PointController {
       );
     });
 
-    this._eventEditComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(
-          this,
-          this._point,
-          Object.assign({}, this._point, {isFavorite: !this._point.isFavorite})
-      );
-    });
+    if (this._mode !== Mode.ADDING) {
+      this._eventEditComponent.setFavoriteButtonClickHandler(() => {
+        this._onDataChange(
+            this,
+            this._point,
+            Object.assign({}, this._point, {isFavorite: !this._point.isFavorite})
+        );
+      });
+    }
+
+    if (this._mode === Mode.EDIT) {
+      this._asd = 1;
+    }
+
+    if (this._mode === Mode.DEFAULT) {
+      this._asd = 1;
+    }
 
     if (oldEventComponent && oldEventEditComponent) {
       replace(this._eventComponent, oldEventComponent);
       replace(this._eventEditComponent, oldEventEditComponent);
+      oldEventEditComponent.removeElement();
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }
