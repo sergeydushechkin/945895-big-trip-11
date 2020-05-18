@@ -63,6 +63,7 @@ export default class TripController {
     this._noEventsComponent = new NoEventsComponent();
     this._sortComponent = null;
     this._daysListComponent = new DaysListComponent();
+    this._addButtonElement = document.querySelector(`button.trip-main__event-add-btn`)
 
     this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
 
@@ -101,6 +102,9 @@ export default class TripController {
       return;
     }
 
+    this._addButtonElement.disabled = true;
+
+    this._pointsModel.resetFilter();
     this._pointsModel.setFilter(FilterType.EVERYTHING);
 
     this._addingNewPoint = new PointController(
@@ -126,20 +130,19 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    if (newData === null) {
-      if (this._pointsModel.removePoint(oldData.id)) {
-        pointController.destroy();
+    if (oldData === EmptyPoint) {
+      this._addingNewPoint = null;
+      this._addButtonElement.disabled = false;
+      pointController.destroy();
+      if (newData !== null) {
+        this._pointsModel.addPoint(newData);
         this._updateEvents();
       }
-    }
-
-    if (oldData === null && newData !== null) {
-      this._pointsModel.addPoint(newData);
+    } else if (newData === null) {
+      pointController.destroy();
+      this._pointsModel.removePoint(oldData.id);
       this._updateEvents();
-      this._addingNewPoint = null;
-    }
-
-    if (oldData !== null && newData !== null) {
+    } else {
       const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
       if (isSuccess) {
         pointController.render(newData, PointControllerMode.DEFAULT);
@@ -149,6 +152,11 @@ export default class TripController {
 
   _onViewChange() {
     this._pointControllers.forEach((pointController) => pointController.setDefaultView());
+    if (this._addingNewPoint) {
+      this._addingNewPoint.destroy();
+      this._addButtonElement.disabled = false;
+      this._addingNewPoint = null;
+    }
   }
 
   _onFilterChange() {

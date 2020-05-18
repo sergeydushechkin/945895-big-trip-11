@@ -7,7 +7,7 @@ import {RenderPosition, render} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 
-const POINTS_COUNT = 20;
+const POINTS_COUNT = 5;
 
 const points = generatePoints(POINTS_COUNT);
 const pointsModel = new PointsModel();

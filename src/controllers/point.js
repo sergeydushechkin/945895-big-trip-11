@@ -51,30 +51,16 @@ export default class PointController {
     this._eventEditComponent.setFormSubmitHandler((evt) => {
       evt.preventDefault();
       const data = this._eventEditComponent.getData();
-
-      if (this._mode !== Mode.ADDING) {
-        this._replaceEventEditToEvent();
-      } else {
-        this.destroy();
-      }
-
       this._mode = Mode.DEFAULT;
       this._onDataChange(
           this,
-          null,
+          point,
           data
       );
     });
 
     this._eventEditComponent.setFormResetHandler((evt) => {
       evt.preventDefault();
-
-      if (this._mode !== Mode.ADDING) {
-        this._replaceEventEditToEvent();
-      } else {
-        this.destroy();
-      }
-
       this._onDataChange(
           this,
           this._point,
@@ -105,6 +91,9 @@ export default class PointController {
         replace(this._eventComponent, oldEventComponent);
         replace(this._eventEditComponent, oldEventEditComponent);
         oldEventEditComponent.removeElement();
+        if (this._mode === Mode.DEFAULT) {
+          this._replaceEventEditToEvent();
+        }
       } else {
         render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
       }
@@ -140,14 +129,15 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
-      if (this._mode === Mode.DEFAULT) {
+      if (this._mode === Mode.ADDING) {
         this._onDataChange(
             this,
             this._point,
             null
         );
+      } else {
+        this._replaceEventEditToEvent();
       }
-      this._replaceEventEditToEvent();
     }
   }
 }

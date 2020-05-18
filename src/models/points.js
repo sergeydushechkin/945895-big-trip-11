@@ -7,6 +7,7 @@ export default class Points {
     this._activeFilter = FilterType.EVERYTHING;
 
     this._filterChangeHandlers = [];
+    this._filterResetHandler = null;
   }
 
   getPoints() {
@@ -55,8 +56,17 @@ export default class Points {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  resetFilter() {
+    this._activeFilter = FilterType.EVERYTHING;
+    this._filterResetHandler();
+  }
+
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  setFilterResetHandler(handler) {
+    this._filterResetHandler = handler;
   }
 
   _callHandlers(handlers) {

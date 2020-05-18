@@ -273,7 +273,8 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const form = this._getFormElementSelector();
-    return parseFormData(form);
+    const data = Object.assign({}, parseFormData(form), {id: this._point.id});
+    return data;
   }
 
   getTemplate() {
