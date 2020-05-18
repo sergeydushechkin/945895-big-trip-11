@@ -5,6 +5,7 @@ import NoEventsComponent from "../components/no-events.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
 import PointController, {EmptyPoint, Mode as PointControllerMode} from "./point.js";
+import {FilterType} from "../const.js";
 
 const renderEvents = (daysListComponent, points, isDefaultSorting, onDataChange, onViewChange) => {
   let pointControllers = [];
@@ -100,8 +101,10 @@ export default class TripController {
       return;
     }
 
+    this._pointsModel.setFilter(FilterType.EVERYTHING);
+
     this._addingNewPoint = new PointController(
-        this._daysListComponent,
+        this._daysListComponent.getElement(),
         this._onDataChange,
         this._onViewChange,
         PointControllerMode.ADDING

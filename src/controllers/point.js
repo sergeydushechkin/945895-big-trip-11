@@ -12,9 +12,9 @@ export const Mode = {
 export const EmptyPoint = {
   id: null,
   type: EVENT_TYPES[0],
-  destination: null,
+  destination: ``,
   dateStart: Date.now(),
-  dateEnd: null,
+  dateEnd: Date.now(),
   price: 0,
   offers: [],
   isFavorite: false
@@ -50,17 +50,31 @@ export default class PointController {
 
     this._eventEditComponent.setFormSubmitHandler((evt) => {
       evt.preventDefault();
-      this._replaceEventEditToEvent();
+      const data = this._eventEditComponent.getData();
+
+      if (this._mode !== Mode.ADDING) {
+        this._replaceEventEditToEvent();
+      } else {
+        this.destroy();
+      }
+
+      this._mode = Mode.DEFAULT;
       this._onDataChange(
           this,
           null,
-          this._point
+          data
       );
     });
 
     this._eventEditComponent.setFormResetHandler((evt) => {
       evt.preventDefault();
-      this._replaceEventEditToEvent();
+
+      if (this._mode !== Mode.ADDING) {
+        this._replaceEventEditToEvent();
+      } else {
+        this.destroy();
+      }
+
       this._onDataChange(
           this,
           this._point,
@@ -78,20 +92,22 @@ export default class PointController {
       });
     }
 
-    if (this._mode === Mode.EDIT) {
-      this._asd = 1;
-    }
-
-    if (this._mode === Mode.DEFAULT) {
-      this._asd = 1;
-    }
-
-    if (oldEventComponent && oldEventEditComponent) {
-      replace(this._eventComponent, oldEventComponent);
-      replace(this._eventEditComponent, oldEventEditComponent);
-      oldEventEditComponent.removeElement();
+    if (this._mode === Mode.ADDING) {
+      if (oldEventComponent && oldEventEditComponent) {
+        remove(oldEventComponent);
+        remove(oldEventEditComponent);
+        oldEventEditComponent.removeElement();
+      }
+      document.addEventListener(`keydown`, this._onEscKeyKeydown);
+      render(this._container, this._eventEditComponent, RenderPosition.BEFOREBEGIN);
     } else {
-      render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+      if (oldEventComponent && oldEventEditComponent) {
+        replace(this._eventComponent, oldEventComponent);
+        replace(this._eventEditComponent, oldEventEditComponent);
+        oldEventEditComponent.removeElement();
+      } else {
+        render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+      }
     }
   }
 
@@ -124,6 +140,13 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
+      if (this._mode === Mode.DEFAULT) {
+        this._onDataChange(
+            this,
+            this._point,
+            null
+        );
+      }
       this._replaceEventEditToEvent();
     }
   }
