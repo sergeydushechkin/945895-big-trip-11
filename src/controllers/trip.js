@@ -63,7 +63,7 @@ export default class TripController {
     this._noEventsComponent = new NoEventsComponent();
     this._sortComponent = null;
     this._daysListComponent = new DaysListComponent();
-    this._addButtonElement = document.querySelector(`button.trip-main__event-add-btn`)
+    this._addButtonElement = document.querySelector(`button.trip-main__event-add-btn`);
 
     this._onSortTypeChangeHandler = this._onSortTypeChangeHandler.bind(this);
 
