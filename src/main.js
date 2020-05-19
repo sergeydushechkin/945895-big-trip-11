@@ -51,7 +51,7 @@ tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`cli
 
 tripController.render();
 
-const statsComponent = new StatsComponent();
+const statsComponent = new StatsComponent(pointsModel);
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
 
 menuComponent.setOnClickHandler((menuTab) => {
