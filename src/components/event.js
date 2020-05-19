@@ -22,8 +22,8 @@ const createOffersTemplate = (offers) => {
   );
 };
 
-const createEventTemplate = (event) => {
-  const {type, destination, dateStart, dateEnd, price, offers} = event;
+const createEventTemplate = (point) => {
+  const {type, destination, dateStart, dateEnd, price, offers} = point;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const offersList = offers ? createOffersTemplate(offers) : ``;
@@ -66,14 +66,14 @@ const createEventTemplate = (event) => {
 };
 
 export default class Event extends AbstractComponent {
-  constructor(event) {
+  constructor(point) {
     super();
 
-    this._event = event;
+    this._point = point;
   }
 
   getTemplate() {
-    return createEventTemplate(this._event);
+    return createEventTemplate(this._point);
   }
 
   setRollupButtonClickHandler(handler) {

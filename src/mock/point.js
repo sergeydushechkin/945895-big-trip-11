@@ -42,36 +42,37 @@ const getRandomDate = (baseDate) => {
   if (baseDate) {
     randomDate = baseDate + Math.round((60 * 60 * getRandomIntegerNumber(0.4, 10) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
   } else {
-    randomDate = Date.now() + Math.round((60 * 60 * getRandomIntegerNumber(1, 24) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
+    randomDate = Date.now() - Math.round((60 * 60 * getRandomIntegerNumber(7, 32) + (60 * getRandomIntegerNumber(30, 60))) * 1000);
   }
 
   return randomDate;
 };
 
-const generateEventOffers = (type) => {
-  let eventOffers = [];
+const generatePointsOffers = (type) => {
+  let pointOffers = [];
   OFFERS[type].forEach((offer) => {
     if (Math.random() > 0.5) {
-      eventOffers.push(Object.assign({}, offer));
+      pointOffers.push(Object.assign({}, offer));
     }
   });
-  return eventOffers;
+  return pointOffers;
 };
 
-const generateEvent = (dateStart, dateEnd) => {
+const generatePoint = (dateStart, dateEnd) => {
   const type = getRandomArrayElement(EVENT_TYPES);
   return {
+    id: Date.now().toString() + Math.random(),
     type,
     destination: getRandomArrayElement(destinationsList).name,
     dateStart,
     dateEnd,
     price: getRandomIntegerNumber(20, 200),
-    offers: generateEventOffers(type),
+    offers: generatePointsOffers(type),
     isFavorite: Math.random() > 0.5
   };
 };
 
-export const generateEvents = (count) => {
+export const generatePoints = (count) => {
   let firstDate = getRandomDate();
   let secondDate = getRandomDate(firstDate);
   return new Array(count)
@@ -79,7 +80,7 @@ export const generateEvents = (count) => {
     .map(() => {
       firstDate = secondDate + (getRandomIntegerNumber(5, 60) * 60 * 1000);
       secondDate = getRandomDate(firstDate);
-      return generateEvent(firstDate, secondDate);
+      return generatePoint(firstDate, secondDate);
     })
     .sort((a, b) => a.dateStart > b.dateStart ? 1 : -1);
 };

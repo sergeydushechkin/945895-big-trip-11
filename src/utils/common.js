@@ -20,19 +20,11 @@ export const formatDateReverse = (date) => {
 
 export const formatDuration = (dateFirst, dateSecond) => {
   const duration = moment.duration(moment(dateSecond).diff(dateFirst));
-  const days = Math.floor(duration.asDays());
-  const hours = Math.floor(duration.asHours()) % 24;
-  const minutes = Math.floor(duration.asMinutes()) % 60;
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
 
-  let result = ``;
-
-  if (days) {
-    result = `${days}D ${hours}H ${minutes}M`;
-  } else if (hours) {
-    result = `${hours}H ${minutes}M`;
-  } else {
-    result = `${minutes}M`;
-  }
+  let result = `${days ? days + `D ` : ``}${hours || days ? hours + `H ` : ``}${minutes}M`;
 
   return result;
 };
