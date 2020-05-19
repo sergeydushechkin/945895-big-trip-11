@@ -1,9 +1,10 @@
 import TripCostComponent from "./components/cost.js";
 import TripInfoComponent from "./components/info.js";
 import MenuComponent, {MenuTab} from "./components/menu.js";
+import StatsComponent from "./components/stats.js";
 import FilterController from "./controllers/filter.js";
 import {generatePoints} from "./mock/point.js";
-import {RenderPosition, render} from "./utils/render.js";
+import {RenderPosition, render, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 
@@ -50,11 +51,19 @@ tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`cli
 
 tripController.render();
 
+const statsComponent = new StatsComponent();
+render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
+
 menuComponent.setOnClickHandler((menuTab) => {
   switch (menuTab) {
     case MenuTab.TABLE:
+      tripEventsElement.classList.remove(HIDDEN_CLASS);
+      tripController.rerender();
+      statsComponent.hide();
       break;
     case MenuTab.STATS:
+      tripEventsElement.classList.add(HIDDEN_CLASS);
+      statsComponent.show();
       break;
   }
 });

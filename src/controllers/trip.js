@@ -97,6 +97,10 @@ export default class TripController {
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
+  rerender() {
+    this._updateEvents();
+  }
+
   addNewPoint() {
     if (this._addingNewPoint) {
       return;
