@@ -186,7 +186,7 @@ const createEventEditTemplate = (point, mode, options, destinations) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="\d*" name="event-price" value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -209,6 +209,19 @@ const createEventEditTemplate = (point, mode, options, destinations) => {
       </form>
       ${mode !== PointControllerMode.ADDING ? `</li>` : ``}`
   );
+};
+
+const validateDestination = (destintationElement, destinations) => {
+  const isExist = destinations.findIndex((it) => it.name === destintationElement.value) === -1
+    ? false
+    : true;
+  if (isExist) {
+    destintationElement.setCustomValidity(``);
+    return true;
+  } else {
+    destintationElement.setCustomValidity(`Назначения не существует, выберите из предложенных`);
+  }
+  return false;
 };
 
 const parseFormData = (form) => {
@@ -293,7 +306,13 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setFormSubmitHandler(handler) {
-    this._getFormElementSelector().addEventListener(`submit`, handler);
+    this._getFormElementSelector().addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+      const destintationElement = this._getFormElementSelector().querySelector(`.event__input--destination`);
+      if (validateDestination(destintationElement, destinationsList)) {
+        handler();
+      }
+    });
     this._submitHandler = handler;
   }
 
