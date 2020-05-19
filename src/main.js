@@ -1,6 +1,6 @@
 import TripCostComponent from "./components/cost.js";
 import TripInfoComponent from "./components/info.js";
-import MenuComponent from "./components/menu.js";
+import MenuComponent, {MenuTab} from "./components/menu.js";
 import FilterController from "./controllers/filter.js";
 import {generatePoints} from "./mock/point.js";
 import {RenderPosition, render} from "./utils/render.js";
@@ -30,9 +30,10 @@ render(
 // Отрисовка меню и фильтрации
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
 
+const menuComponent = new MenuComponent();
 render(
     tripMainControlsElement.querySelector(`h2:nth-of-type(1)`),
-    new MenuComponent(),
+    menuComponent,
     RenderPosition.AFTEREND
 );
 
@@ -48,3 +49,12 @@ tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`cli
 });
 
 tripController.render();
+
+menuComponent.setOnClickHandler((menuTab) => {
+  switch (menuTab) {
+    case MenuTab.TABLE:
+      break;
+    case MenuTab.STATS:
+      break;
+  }
+});
