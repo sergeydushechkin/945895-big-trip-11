@@ -53,6 +53,7 @@ tripController.render();
 
 const statsComponent = new StatsComponent(pointsModel);
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
+statsComponent.hide();
 
 menuComponent.setOnClickHandler((menuTab) => {
   switch (menuTab) {
