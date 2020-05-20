@@ -5,6 +5,7 @@ export const RenderPosition = {
   AFTEREND: `afterend`
 };
 
+export const HIDDEN_CLASS = `trip-events--hidden`;
 
 export const createElement = (elementTemplate) => {
   const tempElement = document.createElement(`div`);

@@ -241,7 +241,7 @@ const parseFormData = (form) => {
     destination: formData.get(`event-destination`),
     dateStart: flatpickr.parseDate(formData.get(`event-start-time`), EVENT_DATE_FORMAT).getTime(),
     dateEnd: flatpickr.parseDate(formData.get(`event-end-time`), EVENT_DATE_FORMAT).getTime(),
-    price: formData.get(`event-price`),
+    price: parseInt(formData.get(`event-price`), 10),
     offers
   };
   return data;
