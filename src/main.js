@@ -1,4 +1,3 @@
-import TripCostComponent from "./components/cost.js";
 import TripInfoComponent from "./components/info.js";
 import MenuComponent, {MenuTab} from "./components/menu.js";
 import StatsComponent from "./components/stats.js";
@@ -18,7 +17,6 @@ const tripMainElement = document.querySelector(`.trip-main`);
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-const tripCostComponent = new TripCostComponent(pointsModel);
 const tripInfoComponent = new TripInfoComponent(pointsModel);
 const menuComponent = new MenuComponent();
 const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
@@ -29,8 +27,7 @@ tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`cli
   tripController.addNewPoint();
 });
 
-render(tripMainElement, tripCostComponent, RenderPosition.AFTERBEGIN);
-render(tripMainElement.querySelector(`.trip-main__trip-info`), tripInfoComponent, RenderPosition.AFTERBEGIN);
+render(tripMainElement, tripInfoComponent, RenderPosition.AFTERBEGIN);
 render(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), menuComponent, RenderPosition.AFTEREND);
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
 

@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from "../const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const createTripInfoTemplate = (points) => {
+const createMainInfoMarkup = (points) => {
   if (!points.length) {
     return ` `;
   }
@@ -26,6 +26,31 @@ const createTripInfoTemplate = (points) => {
 
       <p class="trip-info__dates">${range}</p>
     </div>`
+  );
+};
+
+const createTripCostMarkup = (points) => {
+  const cost = points.length
+    ? points
+        .reduce((totalCost, point) => {
+          return totalCost + point.price;
+        }, 0)
+    : 0;
+  return (
+    `<p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+    </p>`
+  );
+};
+
+const createTripInfoTemplate = (points) => {
+  const mainInfoMarkup = createMainInfoMarkup(points);
+  const tripCostMarkup = createTripCostMarkup(points);
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      ${mainInfoMarkup}
+      ${tripCostMarkup}
+    </section>`
   );
 };
 
