@@ -6,6 +6,7 @@ export default class Points {
     this._points = [];
     this._activeFilter = FilterType.EVERYTHING;
 
+    this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._filterResetHandler = null;
   }
@@ -25,6 +26,8 @@ export default class Points {
   addPoint(data) {
     data.id = Date.now().toString() + Math.random();
     this._points.push(data);
+
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updatePoint(id, newData) {
@@ -35,6 +38,7 @@ export default class Points {
     }
 
     this._points[pointIndex] = newData;
+    this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -47,6 +51,7 @@ export default class Points {
     }
 
     this._points = [].concat(this._points.slice(0, pointIndex), this._points.slice(pointIndex + 1));
+    this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -67,6 +72,10 @@ export default class Points {
 
   setFilterResetHandler(handler) {
     this._filterResetHandler = handler;
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
