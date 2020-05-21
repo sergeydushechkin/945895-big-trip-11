@@ -6,12 +6,18 @@ import {generatePoints} from "./mock/point.js";
 import {RenderPosition, render, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
+import API from "./api.js";
 
 const POINTS_COUNT = 5;
+const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
+const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 const points = generatePoints(POINTS_COUNT);
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+
+const api = new API(END_POINT, AUTHORIZATION);
+console.log(api.getPoints());
 
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
