@@ -15,44 +15,27 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 const tripMainElement = document.querySelector(`.trip-main`);
-
-// Отрисовка стоимости и информации о маршруте
-render(
-    tripMainElement,
-    new TripCostComponent(points),
-    RenderPosition.AFTERBEGIN
-);
-render(
-    tripMainElement.querySelector(`.trip-main__trip-info`),
-    new TripInfoComponent(points),
-    RenderPosition.AFTERBEGIN
-);
-
-// Отрисовка меню и фильтрации
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
-
-const menuComponent = new MenuComponent();
-render(
-    tripMainControlsElement.querySelector(`h2:nth-of-type(1)`),
-    menuComponent,
-    RenderPosition.AFTEREND
-);
-
-const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
-filterController.render();
-
-// Отрисовка основной части
 const tripEventsElement = document.querySelector(`.trip-events`);
+
+const tripCostComponent = new TripCostComponent(points);
+const tripInfoComponent = new TripInfoComponent(points);
+const menuComponent = new MenuComponent();
+const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
 const tripController = new TripController(tripEventsElement, pointsModel);
+const statsComponent = new StatsComponent(pointsModel);
 
 tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.addNewPoint();
 });
 
-tripController.render();
-
-const statsComponent = new StatsComponent(pointsModel);
+render(tripMainElement, tripCostComponent, RenderPosition.AFTERBEGIN);
+render(tripMainElement.querySelector(`.trip-main__trip-info`), tripInfoComponent, RenderPosition.AFTERBEGIN);
+render(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), menuComponent, RenderPosition.AFTEREND);
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
+
+filterController.render();
+tripController.render();
 statsComponent.hide();
 
 menuComponent.setOnClickHandler((menuTab) => {
