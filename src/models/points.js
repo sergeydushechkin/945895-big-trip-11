@@ -21,6 +21,7 @@ export default class Points {
 
   setPoints(points) {
     this._points = points;
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   addPoint(data) {

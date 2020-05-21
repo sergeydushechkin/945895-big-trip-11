@@ -8,16 +8,14 @@ import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import API from "./api.js";
 
-const POINTS_COUNT = 5;
+// const POINTS_COUNT = 5;
 const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
-const points = generatePoints(POINTS_COUNT);
-const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
-
+// const points = generatePoints(POINTS_COUNT);
 const api = new API(END_POINT, AUTHORIZATION);
-console.log(api.getPoints());
+const pointsModel = new PointsModel();
+// pointsModel.setPoints(points);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
@@ -38,7 +36,6 @@ render(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), menuComponent
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
 
 filterController.render();
-tripController.render();
 statsComponent.hide();
 
 menuComponent.setOnClickHandler((menuTab) => {
@@ -54,3 +51,9 @@ menuComponent.setOnClickHandler((menuTab) => {
       break;
   }
 });
+
+api.getPoints()
+  .then((points) => {
+    pointsModel.setPoints(points);
+    tripController.render();
+  });

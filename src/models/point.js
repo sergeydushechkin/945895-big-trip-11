@@ -7,17 +7,17 @@ export default class Point {
     this.dateEnd = Date.parse(data.date_to);
     this.price = data.base_price;
     this.offers = data.offers.map((offer) => {
-      const {name, price} = offer;
+      const {title: name, price} = offer;
       return {name, price};
     });
     this.isFavorite = Boolean(data.is_favorite);
   }
 
-  parsePoint(data) {
+  static parsePoint(data) {
     return new Point(data);
   }
 
-  parsePoints(data) {
+  static parsePoints(data) {
     return data.map(Point.parsePoint);
   }
 
