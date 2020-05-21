@@ -2,6 +2,8 @@ import AbstractComponent from "./abstract-component.js";
 import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils/common.js";
 import {EVENT_PREP} from "../const.js";
 
+const MAX_OFFER_PER_EVENT = 3;
+
 const createOfferMarkup = (offer) => {
   const {name, price} = offer;
   return (
@@ -14,7 +16,11 @@ const createOfferMarkup = (offer) => {
 };
 
 const createOffersTemplate = (offers) => {
-  const offersMarkup = offers.map((offer) => createOfferMarkup(offer)).join(`\n`);
+  const offersMarkup = offers
+    .filter((it, index) => index < MAX_OFFER_PER_EVENT)
+    .map((offer) => createOfferMarkup(offer))
+    .join(`\n`);
+
   return (
     `<ul class="event__selected-offers">
       ${offersMarkup}
