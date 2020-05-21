@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createTripCostTemplate = (points) => {
   const cost = points.length ?
@@ -17,14 +17,24 @@ const createTripCostTemplate = (points) => {
   );
 };
 
-export default class Cost extends AbstractComponent {
-  constructor(points) {
+export default class Cost extends AbstractSmartComponent {
+  constructor(pointsModel) {
     super();
 
-    this._points = points;
+    this._pointsModel = pointsModel;
+
+    this._onDataChange = this._onDataChange.bind(this);
+
+    this._pointsModel.setDataChangeHandler(this._onDataChange);
   }
 
   getTemplate() {
-    return createTripCostTemplate(this._points);
+    return createTripCostTemplate(this._pointsModel.getPointsAll());
+  }
+
+  recoveryListeners() {}
+
+  _onDataChange() {
+    this.rerender();
   }
 }

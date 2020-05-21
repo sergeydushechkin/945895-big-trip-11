@@ -18,7 +18,7 @@ const tripMainElement = document.querySelector(`.trip-main`);
 const tripMainControlsElement = tripMainElement.querySelector(`.trip-main__trip-controls`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-const tripCostComponent = new TripCostComponent(points);
+const tripCostComponent = new TripCostComponent(pointsModel);
 const tripInfoComponent = new TripInfoComponent(points);
 const menuComponent = new MenuComponent();
 const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
