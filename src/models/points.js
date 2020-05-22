@@ -63,7 +63,11 @@ export default class Points {
   }
 
   resetFilter() {
-    this._activeFilter = FilterType.EVERYTHING;
+    if (this._activeFilter === FilterType.EVERYTHING) {
+      return;
+    }
+
+    this.setFilter(FilterType.EVERYTHING);
     this._filterResetHandler();
   }
 

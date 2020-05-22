@@ -6,10 +6,7 @@ export default class Point {
     this.dateStart = Date.parse(data.date_from);
     this.dateEnd = Date.parse(data.date_to);
     this.price = data.base_price;
-    this.offers = data.offers.map((offer) => {
-      const {title: name, price} = offer;
-      return {name, price};
-    });
+    this.offers = data.offers;
     this.isFavorite = Boolean(data.is_favorite);
   }
 

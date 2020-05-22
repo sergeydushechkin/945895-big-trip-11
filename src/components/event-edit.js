@@ -36,14 +36,14 @@ const createEventEditDestinationsMarkup = (destination) => {
 
 const createEventEditOffersMarkup = (pointOffers, offers) => {
   return offers.map((offer) => {
-    const {name, price} = offer;
-    const type = name.replace(/\s+/g, ``);
-    const status = pointOffers.findIndex((it) => it.name === name) !== -1 ? `checked` : ``;
+    const {title, price} = offer;
+    const type = title.replace(/\s+/g, ``);
+    const status = pointOffers.findIndex((it) => it.title === title) !== -1 ? `checked` : ``;
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="${OFFER_NAME_PREFIX}${type}" ${status}>
         <label class="event__offer-label" for="event-offer-${type}-1">
-          <span class="event__offer-title">${name}</span>
+          <span class="event__offer-title">${title}</span>
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${price}</span>
         </label>

@@ -27,8 +27,8 @@ const parseFormData = (formData) => {
   let offers = [];
 
   OFFERS[type].forEach((offer) => {
-    const offerName = offer.name.replace(/\s+/g, ``);
-    if (formData.has(`${OFFER_NAME_PREFIX}${offerName}`)) {
+    const offerTitle = offer.title.replace(/\s+/g, ``);
+    if (formData.has(`${OFFER_NAME_PREFIX}${offerTitle}`)) {
       offers.push(offer);
     }
   });

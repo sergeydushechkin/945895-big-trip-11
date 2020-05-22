@@ -5,7 +5,6 @@ import NoEventsComponent from "../components/no-events.js";
 import {RenderPosition, render, replace} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
 import PointController, {EmptyPoint, Mode as PointControllerMode} from "./point.js";
-import {FilterType} from "../const.js";
 
 const renderEvents = (daysListComponent, points, isDefaultSorting, onDataChange, onViewChange) => {
   let pointControllers = [];
@@ -40,7 +39,7 @@ const getSortedEvents = (points, sortType) => {
 
   switch (sortType) {
     case SortType.EVENT:
-      sortedPoints = points;
+      sortedPoints = points.slice().sort((a, b) => a.dateStart - b.dateStart);
       break;
     case SortType.TIME:
       sortedPoints = points.slice().sort((a, b) => (b.dateEnd - b.dateStart) - (a.dateEnd - a.dateStart));
@@ -93,7 +92,7 @@ export default class TripController {
       return;
     }
 
-    this._pointControllers = renderEvents(this._daysListComponent, this._pointsModel.getPoints(), true, this._onDataChange, this._onViewChange);
+    this._pointControllers = renderEvents(this._daysListComponent, getSortedEvents(this._pointsModel.getPoints(), SortType.EVENT), true, this._onDataChange, this._onViewChange);
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
@@ -109,7 +108,6 @@ export default class TripController {
     this._addButtonElement.disabled = true;
 
     this._pointsModel.resetFilter();
-    this._pointsModel.setFilter(FilterType.EVERYTHING);
 
     this._addingNewPoint = new PointController(
         this._daysListComponent.getElement(),
