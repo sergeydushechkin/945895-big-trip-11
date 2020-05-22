@@ -24,15 +24,18 @@ export const getDestinations = () => {
       description = `${description} ${getRandomArrayElement(descriptions)}`;
     }
 
-    let photos = [];
+    let pictures = [];
     for (let i = 0; i < getRandomIntegerNumber(1, 5); i++) {
-      photos.push(`http://picsum.photos/248/152?r=${getRandomIntegerNumber(1, 50)}`);
+      pictures.push({
+        src: `http://picsum.photos/248/152?r=${getRandomIntegerNumber(1, 50)}`,
+        description: `${getRandomArrayElement(descriptions)}`
+      });
     }
 
     return {
       name: city,
       description,
-      photos
+      pictures
     };
   });
 };
@@ -63,7 +66,7 @@ const generatePoint = (dateStart, dateEnd) => {
   return {
     id: Date.now().toString() + Math.random(),
     type,
-    destination: getRandomArrayElement(destinationsList).name,
+    destination: getRandomArrayElement(destinationsList),
     dateStart,
     dateEnd,
     price: getRandomIntegerNumber(20, 200),

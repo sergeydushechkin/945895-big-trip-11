@@ -1,7 +1,9 @@
 import EventComponent from "../components/event.js";
-import EventEditComponent from "../components/event-edit.js";
+import EventEditComponent, {EVENT_DATE_FORMAT, OFFER_NAME_PREFIX} from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
-import {EVENT_TYPES} from "../const.js";
+import {EVENT_TYPES, OFFERS} from "../const.js";
+
+import flatpickr from "flatpickr";
 
 export const Mode = {
   ADDING: `adding`,
@@ -18,6 +20,27 @@ export const EmptyPoint = {
   price: 0,
   offers: [],
   isFavorite: false
+};
+
+const parseFormData = (formData) => {
+  const type = formData.get(`event-type`);
+  let offers = [];
+
+  OFFERS[type].forEach((offer) => {
+    const offerName = offer.name.replace(/\s+/g, ``);
+    if (formData.has(`${OFFER_NAME_PREFIX}${offerName}`)) {
+      offers.push(offer);
+    }
+  });
+
+  const data = {
+    type,
+    dateStart: flatpickr.parseDate(formData.get(`event-start-time`), EVENT_DATE_FORMAT).getTime(),
+    dateEnd: flatpickr.parseDate(formData.get(`event-end-time`), EVENT_DATE_FORMAT).getTime(),
+    price: parseInt(formData.get(`event-price`), 10),
+    offers
+  };
+  return data;
 };
 
 export default class PointController {
@@ -49,12 +72,15 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFormSubmitHandler(() => {
-      const data = this._eventEditComponent.getData();
+      const {formData, destination} = this._eventEditComponent.getData();
+      const parsedFormData = parseFormData(formData);
+      const newData = Object.assign({}, parsedFormData, {destination});
+
       this._mode = Mode.DEFAULT;
       this._onDataChange(
           this,
           point,
-          data
+          newData
       );
     });
 

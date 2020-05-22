@@ -14,7 +14,7 @@ const createMainInfoMarkup = (points) => {
 
   const range = `${beginDate}&nbsp;&mdash;&nbsp;${endDate}`;
 
-  const destinations = Array.from(new Set(points.map((point) => point.destination)));
+  const destinations = Array.from(new Set(points.map((point) => point.destination.name)));
 
   const route = destinations.length > 3
     ? `${destinations[0]} &mdash; … &mdash; ${destinations[destinations.length - 1]}`
