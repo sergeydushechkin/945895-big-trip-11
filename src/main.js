@@ -8,6 +8,7 @@ import {RenderPosition, render, remove, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import API from "./api.js";
+import Store from "./store.js";
 
 // const POINTS_COUNT = 5;
 const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
@@ -55,9 +56,19 @@ menuComponent.setOnClickHandler((menuTab) => {
   }
 });
 
+api.getDestinations()
+  .then((destinations) => Store.setDestinations(destinations));
+
+api.getOffers()
+  .then((offers) => Store.setOffers(offers));
+
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(points);
     remove(loadingComponent);
     tripController.render();
   });
+
+
+console.log(Store.getOffers());
+console.log(Store.getDestinations());
