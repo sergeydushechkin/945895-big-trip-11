@@ -2,8 +2,9 @@ import TripInfoComponent from "./components/info.js";
 import MenuComponent, {MenuTab} from "./components/menu.js";
 import StatsComponent from "./components/stats.js";
 import FilterController from "./controllers/filter.js";
+import LoadingComponent from "./components/loading.js";
 import {generatePoints} from "./mock/point.js";
-import {RenderPosition, render, HIDDEN_CLASS} from "./utils/render.js";
+import {RenderPosition, render, remove, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import API from "./api.js";
@@ -26,6 +27,7 @@ const menuComponent = new MenuComponent();
 const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
 const tripController = new TripController(tripEventsElement, pointsModel);
 const statsComponent = new StatsComponent(pointsModel);
+const loadingComponent = new LoadingComponent();
 
 tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.addNewPoint();
@@ -34,6 +36,7 @@ tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`cli
 render(tripMainElement, tripInfoComponent, RenderPosition.AFTERBEGIN);
 render(tripMainControlsElement.querySelector(`h2:nth-of-type(1)`), menuComponent, RenderPosition.AFTEREND);
 render(tripEventsElement, statsComponent, RenderPosition.AFTEREND);
+render(tripEventsElement, loadingComponent, RenderPosition.BEFOREEND);
 
 filterController.render();
 statsComponent.hide();
@@ -55,5 +58,6 @@ menuComponent.setOnClickHandler((menuTab) => {
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(points);
+    remove(loadingComponent);
     tripController.render();
   });
