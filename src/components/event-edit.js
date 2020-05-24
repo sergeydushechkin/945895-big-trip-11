@@ -1,9 +1,9 @@
-import {EVENT_PREP, OFFERS} from "../const.js";
+import {EVENT_PREP} from "../const.js";
 import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {destinationsList} from "../mock/point.js";
 import flatpickr from "flatpickr";
 import {Mode as PointControllerMode} from "../controllers/point.js";
+import Store from "../store.js";
 
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -235,7 +235,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._pointDestination = point.destination;
     this._pointOffers = point.offers;
 
-    this._destinations = destinationsList;
+    this._destinations = Store.getDestinations();
 
     this._submitHandler = null;
     this._resetHandler = null;
@@ -289,7 +289,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._getFormElementSelector().addEventListener(`submit`, (evt) => {
       evt.preventDefault();
       const destintationElement = this._getFormElementSelector().querySelector(`.event__input--destination`);
-      if (validateDestination(destintationElement, destinationsList)) {
+      if (validateDestination(destintationElement, this._destinations)) {
         handler();
       }
     });
@@ -321,7 +321,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     element.querySelector(`.event__type-list`).addEventListener(`change`, () => {
       this._pointType = element.querySelector(`.event__type-list .event__type-input:checked`).value;
-      this._pointOffers = OFFERS[this._pointType];
+      this._pointOffers = Store.getOffers()[this._pointType];
       this.rerender();
     });
 

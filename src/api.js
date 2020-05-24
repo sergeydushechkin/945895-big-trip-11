@@ -1,4 +1,5 @@
 import Point from "./models/point.js";
+import Offer from "./models/offer.js";
 
 const Method = {
   GET: `GET`,
@@ -34,7 +35,8 @@ export default class API {
 
   getOffers() {
     return this._load({url: `offers`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .then(Offer.parseOffers);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

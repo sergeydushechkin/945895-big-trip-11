@@ -11,6 +11,14 @@ import API from "./api.js";
 import Store from "./store.js";
 
 // const POINTS_COUNT = 5;
+const onError = (error) => {
+  const node = document.createElement(`div`);
+  node.style = `width: 180px; margin: 0 auto; text-align: center; background-color: red;`;
+
+  node.textContent = error;
+  document.body.insertAdjacentElement(`afterbegin`, node);
+};
+
 const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
 const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
@@ -57,18 +65,13 @@ menuComponent.setOnClickHandler((menuTab) => {
 });
 
 api.getDestinations()
-  .then((destinations) => Store.setDestinations(destinations));
-
-api.getOffers()
-  .then((offers) => Store.setOffers(offers));
-
-api.getPoints()
+  .then((destinations) => Store.setDestinations(destinations))
+  .then(api.getOffers.bind(api))
+  .then((offers) => Store.setOffers(offers))
+  .then(api.getPoints.bind(api))
   .then((points) => {
     pointsModel.setPoints(points);
     remove(loadingComponent);
     tripController.render();
-  });
-
-
-console.log(Store.getOffers());
-console.log(Store.getDestinations());
+  })
+  .catch(onError);

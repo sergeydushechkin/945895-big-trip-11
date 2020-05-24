@@ -2,6 +2,7 @@ import EventComponent from "../components/event.js";
 import EventEditComponent, {EVENT_DATE_FORMAT, OFFER_NAME_PREFIX} from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {EVENT_TYPES, OFFERS} from "../const.js";
+import Store from "../store.js";
 
 import flatpickr from "flatpickr";
 
@@ -26,7 +27,7 @@ const parseFormData = (formData) => {
   const type = formData.get(`event-type`);
   let offers = [];
 
-  OFFERS[type].forEach((offer) => {
+  Store.getOffers()[type].forEach((offer) => {
     const offerTitle = offer.title.replace(/\s+/g, ``);
     if (formData.has(`${OFFER_NAME_PREFIX}${offerTitle}`)) {
       offers.push(offer);

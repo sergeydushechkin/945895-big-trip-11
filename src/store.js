@@ -1,4 +1,8 @@
 export default class Store {
+  constructor() {
+    this._destinations = null;
+  }
+
   static setDestinations(data) {
     this._destinations = data;
   }
