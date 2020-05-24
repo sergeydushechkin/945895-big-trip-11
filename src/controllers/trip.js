@@ -2,7 +2,7 @@ import SortComponent, {SortType} from "../components/sort.js";
 import DaysListComponent from "../components/days-list.js";
 import DayComponent from "../components/day.js";
 import NoEventsComponent from "../components/no-events.js";
-import {RenderPosition, render, replace} from "../utils/render.js";
+import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {formatDateReverse} from "../utils/common.js";
 import PointController, {EmptyPoint, Mode as PointControllerMode} from "./point.js";
 
@@ -78,6 +78,15 @@ export default class TripController {
     const oldSortComponent = this._sortComponent;
     this._sortComponent = new SortComponent();
 
+    // Отрисовка событий
+    if (!this._pointsModel.getPointsAll().length) {
+      remove(oldSortComponent);
+      render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
+      return;
+    } else {
+      remove(this._noEventsComponent);
+    }
+
     if (oldSortComponent) {
       replace(this._sortComponent, oldSortComponent);
     } else {
@@ -85,12 +94,6 @@ export default class TripController {
     }
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChangeHandler);
-
-    // Отрисовка событий
-    if (!this._pointsModel.getPointsAll().length) {
-      render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
-      return;
-    }
 
     this._pointControllers = renderEvents(this._daysListComponent, getSortedEvents(this._pointsModel.getPoints(), SortType.EVENT), true, this._onDataChange, this._onViewChange);
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
