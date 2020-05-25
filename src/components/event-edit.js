@@ -282,6 +282,15 @@ export default class EventEdit extends AbstractSmartComponent {
     this.rerender();
   }
 
+  setFormBlocked(state) {
+    const formInputs = Array.from(this._getFormElementSelector().querySelectorAll(`input, button`));
+    if (state) {
+      formInputs.forEach((element) => element.setAttribute(`disabled`, `disabled`));
+    } else {
+      formInputs.forEach((element) => element.removeAttribute(`disabled`));
+    }
+  }
+
   getTemplate() {
     return createEventEditTemplate(
         this._point,

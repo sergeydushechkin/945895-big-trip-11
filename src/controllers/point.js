@@ -80,6 +80,7 @@ export default class PointController {
 
       this._mode = Mode.DEFAULT;
       this._eventEditComponent.setExternalData({saveButtonText: `Saving...`});
+      this._eventEditComponent.setFormBlocked(true);
 
       this._onDataChange(
           this,
@@ -92,6 +93,7 @@ export default class PointController {
       evt.preventDefault();
 
       this._eventEditComponent.setExternalData({deleteButtonText: `Deleting...`});
+      this._eventEditComponent.setFormBlocked(true);
 
       this._onDataChange(
           this,
