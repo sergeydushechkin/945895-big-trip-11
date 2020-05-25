@@ -3,8 +3,8 @@ export default class Point {
     this.id = data.id;
     this.type = data.type;
     this.destination = data.destination;
-    this.dateStart = Date.parse(data.date_from) ? Date.parse(data.date_from) : data.date_from;
-    this.dateEnd = Date.parse(data.date_to) ? Date.parse(data.date_to) : data.date_to;
+    this.dateStart = Date.parse(data.date_from);
+    this.dateEnd = Date.parse(data.date_to);
     this.price = data.base_price;
     this.offers = data.offers;
     this.isFavorite = Boolean(data.is_favorite);
@@ -15,8 +15,8 @@ export default class Point {
       "id": this.id,
       "type": this.type,
       "destination": this.destination,
-      "date_from": this.dateStart,
-      "date_to": this.dateEnd,
+      "date_from": new Date(this.dateStart).toISOString(),
+      "date_to": new Date(this.dateEnd).toISOString(),
       "base_price": this.price,
       "offers": this.offers,
       "is_favorite": this.isFavorite

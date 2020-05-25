@@ -37,8 +37,8 @@ const parseFormData = (formData) => {
 
   return new PointModel({
     "type": type,
-    "date_from": flatpickr.parseDate(formData.get(`event-start-time`), EVENT_DATE_FORMAT).getTime(),
-    "date_to": flatpickr.parseDate(formData.get(`event-end-time`), EVENT_DATE_FORMAT).getTime(),
+    "date_from": flatpickr.parseDate(formData.get(`event-start-time`), EVENT_DATE_FORMAT).toISOString(),
+    "date_to": flatpickr.parseDate(formData.get(`event-end-time`), EVENT_DATE_FORMAT).toISOString(),
     "base_price": parseInt(formData.get(`event-price`), 10),
     "offers": offers,
     "destination": {},
