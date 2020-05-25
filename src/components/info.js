@@ -6,15 +6,17 @@ const createMainInfoMarkup = (points) => {
     return ` `;
   }
 
-  const firstDate = new Date(points[0].dateStart);
-  const lastDate = new Date(points[points.length - 1].dateEnd);
+  const sortedPoints = points.slice().sort((a, b) => a.dateStart - b.dateStart);
+
+  const firstDate = new Date(sortedPoints[0].dateStart);
+  const lastDate = new Date(sortedPoints[sortedPoints.length - 1].dateEnd);
 
   const beginDate = `${MONTH_NAMES[firstDate.getMonth()]} ${firstDate.getDate()}`;
   const endDate = `${MONTH_NAMES[lastDate.getMonth()]} ${lastDate.getDate()}`;
 
   const range = `${beginDate}&nbsp;&mdash;&nbsp;${endDate}`;
 
-  const destinations = Array.from(new Set(points.map((point) => point.destination.name)));
+  const destinations = Array.from(new Set(sortedPoints.map((point) => point.destination.name)));
 
   const route = destinations.length > 3
     ? `${destinations[0]} &mdash; … &mdash; ${destinations[destinations.length - 1]}`
