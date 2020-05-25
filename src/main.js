@@ -30,7 +30,7 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 const tripInfoComponent = new TripInfoComponent(pointsModel);
 const menuComponent = new MenuComponent();
 const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
-const tripController = new TripController(tripEventsElement, pointsModel);
+const tripController = new TripController(tripEventsElement, pointsModel, api);
 const statsComponent = new StatsComponent(pointsModel);
 const loadingComponent = new LoadingComponent();
 
