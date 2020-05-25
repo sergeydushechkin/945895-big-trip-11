@@ -13,10 +13,9 @@ const getUniqueTypes = (points) => {
 
 const getTypesCosts = (points, types) => {
   return types.map((type) => {
-    const asd = points.reduce((acc, it) => {
+    return points.reduce((acc, it) => {
       return it.type === type ? acc + it.price : acc;
     }, 0);
-    return asd;
   });
 };
 
@@ -298,7 +297,7 @@ export default class StatsComponents extends AbstractSmartComponent {
 
     moneyCtx.height = BAR_HEIGHT * 6;
     transportCtx.height = BAR_HEIGHT * 4;
-    timeSpendCtx.height = BAR_HEIGHT * 4;
+    timeSpendCtx.height = BAR_HEIGHT * 6;
 
     this._moneyChart = renderMoneyChart(this._pointsModel.getPointsAll(), moneyCtx);
     this._transportChart = renderTransportChart(this._pointsModel.getPointsAll(), transportCtx);
