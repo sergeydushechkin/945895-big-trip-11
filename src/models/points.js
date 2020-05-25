@@ -25,7 +25,6 @@ export default class Points {
   }
 
   addPoint(data) {
-    data.id = Date.now().toString() + Math.random();
     this._points.push(data);
 
     this._callHandlers(this._dataChangeHandlers);

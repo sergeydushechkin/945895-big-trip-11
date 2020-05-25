@@ -14,7 +14,6 @@ export const Mode = {
 };
 
 export const EmptyPoint = {
-  id: null,
   type: EVENT_TYPES[0],
   destination: ``,
   dateStart: Date.now(),
