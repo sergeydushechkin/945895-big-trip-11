@@ -10,6 +10,11 @@ import "flatpickr/dist/flatpickr.min.css";
 export const EVENT_DATE_FORMAT = `d/m/y H:i`;
 export const OFFER_NAME_PREFIX = `event-offer-`;
 
+const DefaultData = {
+  deleteButtonText: `Delete`,
+  saveButtonText: `Save`,
+};
+
 const createEventEditPhotosMarkup = (pictures) => {
   const photosElements = pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(`\n`);
   return (
@@ -77,7 +82,7 @@ const createdestinationsListMarkup = (destinations) => {
 
 const createEventEditTemplate = (point, mode, options, destinations) => {
   const {dateStart, dateEnd, price, isFavorite} = point;
-  const {type, destination, offers} = options;
+  const {type, destination, offers, externalData} = options;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(new Date(dateStart));
@@ -190,8 +195,8 @@ const createEventEditTemplate = (point, mode, options, destinations) => {
             <input class="event__input  event__input--price" id="event-price-1" type="number" pattern="\d*" name="event-price" value="${price}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${mode !== PointControllerMode.ADDING ? `Delete` : `Cancel`}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${externalData.saveButtonText}</button>
+          <button class="event__reset-btn" type="reset">${mode !== PointControllerMode.ADDING ? `${externalData.deleteButtonText}` : `Cancel`}</button>
 
           ${mode !== PointControllerMode.ADDING ? `
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favorite}>
@@ -234,6 +239,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._pointType = point.type;
     this._pointDestination = point.destination;
     this._pointOffers = point.offers;
+    this._externalData = DefaultData;
 
     this._destinations = Store.getDestinations();
 
@@ -271,11 +277,16 @@ export default class EventEdit extends AbstractSmartComponent {
     };
   }
 
+  setExternalData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
+  }
+
   getTemplate() {
     return createEventEditTemplate(
         this._point,
         this._mode,
-        {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers},
+        {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers, externalData: this._externalData},
         this._destinations
     );
   }

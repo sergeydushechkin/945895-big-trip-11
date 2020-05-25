@@ -79,6 +79,8 @@ export default class PointController {
       parsedFormData.destination = destination;
 
       this._mode = Mode.DEFAULT;
+      this._eventEditComponent.setExternalData({saveButtonText: `Saving...`});
+
       this._onDataChange(
           this,
           point,
@@ -88,6 +90,9 @@ export default class PointController {
 
     this._eventEditComponent.setFormResetHandler((evt) => {
       evt.preventDefault();
+
+      this._eventEditComponent.setExternalData({deleteButtonText: `Deleting...`});
+
       this._onDataChange(
           this,
           this._point,
