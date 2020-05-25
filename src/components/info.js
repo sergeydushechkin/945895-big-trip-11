@@ -33,7 +33,9 @@ const createTripCostMarkup = (points) => {
   const cost = points.length
     ? points
         .reduce((totalCost, point) => {
-          return totalCost + point.price;
+          return totalCost + point.price + point.offers.reduce((totalOffersPrice, offer) => {
+            return totalOffersPrice + offer.price;
+          }, 0);
         }, 0)
     : 0;
   return (
