@@ -1,7 +1,7 @@
 import {MONTH_NAMES} from "../const.js";
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const createTripInfoTemplate = (points) => {
+const createMainInfoMarkup = (points) => {
   if (!points.length) {
     return ` `;
   }
@@ -10,10 +10,15 @@ const createTripInfoTemplate = (points) => {
   const lastDate = new Date(points[points.length - 1].dateEnd);
 
   const beginDate = `${MONTH_NAMES[firstDate.getMonth()]} ${firstDate.getDate()}`;
-  const endDate = `${lastDate.getDate()}`;
+  const endDate = `${MONTH_NAMES[lastDate.getMonth()]} ${lastDate.getDate()}`;
 
   const range = `${beginDate}&nbsp;&mdash;&nbsp;${endDate}`;
-  const route = Array.from(new Set(points.map((event) => event.destination))).join(`  &mdash; `);
+
+  const destinations = Array.from(new Set(points.map((point) => point.destination.name)));
+
+  const route = destinations.length > 3
+    ? `${destinations[0]} &mdash; … &mdash; ${destinations[destinations.length - 1]}`
+    : `${destinations.join(`  &mdash; `)}`;
 
   return (
     `<div class="trip-info__main">
@@ -24,14 +29,51 @@ const createTripInfoTemplate = (points) => {
   );
 };
 
-export default class Info extends AbstractComponent {
-  constructor(points) {
+const createTripCostMarkup = (points) => {
+  const cost = points.length
+    ? points
+        .reduce((totalCost, point) => {
+          return totalCost + point.price + point.offers.reduce((totalOffersPrice, offer) => {
+            return totalOffersPrice + offer.price;
+          }, 0);
+        }, 0)
+    : 0;
+  return (
+    `<p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+    </p>`
+  );
+};
+
+const createTripInfoTemplate = (points) => {
+  const mainInfoMarkup = createMainInfoMarkup(points);
+  const tripCostMarkup = createTripCostMarkup(points);
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      ${mainInfoMarkup}
+      ${tripCostMarkup}
+    </section>`
+  );
+};
+
+export default class Info extends AbstractSmartComponent {
+  constructor(pointsModel) {
     super();
 
-    this._points = points;
+    this._pointsModel = pointsModel;
+
+    this._onDataChange = this._onDataChange.bind(this);
+
+    this._pointsModel.setDataChangeHandler(this._onDataChange);
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._points);
+    return createTripInfoTemplate(this._pointsModel.getPointsAll());
+  }
+
+  recoveryListeners() {}
+
+  _onDataChange() {
+    this.rerender();
   }
 }

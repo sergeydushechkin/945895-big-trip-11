@@ -2,11 +2,13 @@ import AbstractComponent from "./abstract-component.js";
 import {formatTime, formatDuration, capitalizeFirstLetter} from "../utils/common.js";
 import {EVENT_PREP} from "../const.js";
 
+const MAX_OFFER_PER_EVENT = 3;
+
 const createOfferMarkup = (offer) => {
-  const {name, price} = offer;
+  const {title, price} = offer;
   return (
     `<li class="event__offer">
-      <span class="event__offer-title">${name}</span>
+      <span class="event__offer-title">${title}</span>
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${price}</span>
     </li>`
@@ -14,7 +16,11 @@ const createOfferMarkup = (offer) => {
 };
 
 const createOffersTemplate = (offers) => {
-  const offersMarkup = offers.map((offer) => createOfferMarkup(offer)).join(`\n`);
+  const offersMarkup = offers
+    .filter((it, index) => index < MAX_OFFER_PER_EVENT)
+    .map((offer) => createOfferMarkup(offer))
+    .join(`\n`);
+
   return (
     `<ul class="event__selected-offers">
       ${offersMarkup}
@@ -39,7 +45,7 @@ const createEventTemplate = (point) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination}</h3>
+        <h3 class="event__title">${eventTypeName} ${EVENT_PREP[type]} ${destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

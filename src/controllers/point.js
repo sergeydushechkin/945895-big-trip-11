@@ -1,7 +1,11 @@
 import EventComponent from "../components/event.js";
-import EventEditComponent from "../components/event-edit.js";
+import EventEditComponent, {EVENT_DATE_FORMAT, OFFER_NAME_PREFIX} from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {EVENT_TYPES} from "../const.js";
+import Store from "../store.js";
+import PointModel from "../models/point.js";
+
+import flatpickr from "flatpickr";
 
 export const Mode = {
   ADDING: `adding`,
@@ -18,6 +22,28 @@ export const EmptyPoint = {
   price: 0,
   offers: [],
   isFavorite: false
+};
+
+const parseFormData = (formData) => {
+  const type = formData.get(`event-type`);
+  let offers = [];
+
+  Store.getOffers()[type].forEach((offer) => {
+    const offerTitle = offer.title.replace(/\s+/g, ``);
+    if (formData.has(`${OFFER_NAME_PREFIX}${offerTitle}`)) {
+      offers.push(offer);
+    }
+  });
+
+  return new PointModel({
+    "type": type,
+    "date_from": flatpickr.parseDate(formData.get(`event-start-time`), EVENT_DATE_FORMAT).toISOString(),
+    "date_to": flatpickr.parseDate(formData.get(`event-end-time`), EVENT_DATE_FORMAT).toISOString(),
+    "base_price": parseInt(formData.get(`event-price`), 10),
+    "offers": offers,
+    "destination": {},
+    "is_favorite": formData.get(`event-favorite`) === `on`
+  });
 };
 
 export default class PointController {
@@ -49,12 +75,15 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFormSubmitHandler(() => {
-      const data = this._eventEditComponent.getData();
+      const {formData, destination} = this._eventEditComponent.getData();
+      const parsedFormData = parseFormData(formData);
+      parsedFormData.destination = destination;
+
       this._mode = Mode.DEFAULT;
       this._onDataChange(
           this,
           point,
-          data
+          parsedFormData
       );
     });
 
@@ -69,11 +98,18 @@ export default class PointController {
 
     if (this._mode !== Mode.ADDING) {
       this._eventEditComponent.setFavoriteButtonClickHandler(() => {
+        const newPoint = PointModel.clone(this._point);
+        newPoint.isFavorite = !newPoint.isFavorite;
+
         this._onDataChange(
             this,
             this._point,
-            Object.assign({}, this._point, {isFavorite: !this._point.isFavorite})
+            newPoint
         );
+      });
+
+      this._eventEditComponent.setRollupButtonClickHandler(() => {
+        this._replaceEventEditToEvent();
       });
     }
 
