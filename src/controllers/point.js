@@ -7,6 +7,8 @@ import PointModel from "../models/point.js";
 
 import flatpickr from "flatpickr";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const Mode = {
   ADDING: `adding`,
   EDIT: `edit`,
@@ -74,6 +76,8 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFormSubmitHandler(() => {
+      this._eventEditComponent.setRedBorder(false);
+
       const {formData, destination} = this._eventEditComponent.getData();
       const parsedFormData = parseFormData(formData);
       parsedFormData.destination = destination;
@@ -91,6 +95,7 @@ export default class PointController {
 
     this._eventEditComponent.setFormResetHandler((evt) => {
       evt.preventDefault();
+      this._eventEditComponent.setRedBorder(false);
 
       this._eventEditComponent.setExternalData({deleteButtonText: `Deleting...`});
       this._eventEditComponent.setFormBlocked(true);
@@ -145,6 +150,23 @@ export default class PointController {
     remove(this._eventComponent);
     remove(this._eventEditComponent);
     document.removeEventListener(`keydown`, this._onEscKeyKeydown);
+  }
+
+  shake() {
+    this._eventEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._eventEditComponent.getElement().style.animation = ``;
+      this._eventComponent.getElement().style.animation = ``;
+
+      this._eventEditComponent.setExternalData({
+        saveButtonText: `Save`,
+        deleteButtonText: `Delete`,
+      });
+
+      this._eventEditComponent.setRedBorder(true);
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _replaceEventToEventEdit() {

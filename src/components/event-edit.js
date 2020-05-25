@@ -291,6 +291,14 @@ export default class EventEdit extends AbstractSmartComponent {
     }
   }
 
+  setRedBorder(state) {
+    if (state) {
+      this._getFormElementSelector().classList.add(`red-border`);
+    } else {
+      this._getFormElementSelector().classList.remove(`red-border`);
+    }
+  }
+
   getTemplate() {
     return createEventEditTemplate(
         this._point,
