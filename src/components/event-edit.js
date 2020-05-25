@@ -242,6 +242,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._favoriteButtonHandler = null;
     this._flatpickrStartTime = null;
     this._flatpickrEndTime = null;
+    this._rollupButtonHandler = null;
 
     this._eventStartTimeElementChangeHandler = this._eventStartTimeElementChangeHandler.bind(this);
 
@@ -306,6 +307,11 @@ export default class EventEdit extends AbstractSmartComponent {
     this._favoriteButtonHandler = handler;
   }
 
+  setRollupButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._rollupButtonHandler = handler;
+  }
+
   recoveryListeners() {
     this.setFormSubmitHandler(this._submitHandler);
     this.setFormResetHandler(this._resetHandler);
@@ -313,6 +319,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     if (this._mode !== PointControllerMode.ADDING) {
       this.setFavoriteButtonClickHandler(this._favoriteButtonHandler);
+      this.setRollupButtonClickHandler(this._rollupButtonHandler);
     }
   }
 

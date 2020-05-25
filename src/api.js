@@ -1,5 +1,6 @@
 import Point from "./models/point.js";
 import Offer from "./models/offer.js";
+import Store from "./store.js";
 
 const Method = {
   GET: `GET`,
@@ -7,6 +8,8 @@ const Method = {
   PUT: `PUT`,
   DELETE: `DELETE`
 };
+
+const URLS = [`points`, `destinations`, `offers`];
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -22,21 +25,17 @@ export default class API {
     this._authorization = authorization;
   }
 
-  getPoints() {
-    return this._load({url: `points`})
-      .then((response) => response.json())
+  getData() {
+    const requests = URLS.map((it) => this._load({url: it}));
+    return Promise.all(requests)
+      .then((responses) => Promise.all(responses.map((it) => it.json())))
+      .then((responses) => {
+        const [points, destinations, offers] = responses;
+        Store.setDestinations(destinations);
+        Store.setOffers(Offer.parseOffers(offers));
+        return points;
+      })
       .then(Point.parsePoints);
-  }
-
-  getDestinations() {
-    return this._load({url: `destinations`})
-      .then((response) => response.json());
-  }
-
-  getOffers() {
-    return this._load({url: `offers`})
-      .then((response) => response.json())
-      .then(Offer.parseOffers);
   }
 
   updatePoint(id, data) {

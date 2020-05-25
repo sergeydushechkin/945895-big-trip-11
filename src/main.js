@@ -7,7 +7,6 @@ import {RenderPosition, render, remove, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
 import API from "./api.js";
-import Store from "./store.js";
 
 const onError = (error) => {
   const node = document.createElement(`div`);
@@ -60,11 +59,7 @@ menuComponent.setOnClickHandler((menuTab) => {
   }
 });
 
-api.getDestinations()
-  .then((destinations) => Store.setDestinations(destinations))
-  .then(api.getOffers.bind(api))
-  .then((offers) => Store.setOffers(offers))
-  .then(api.getPoints.bind(api))
+api.getData()
   .then((points) => {
     pointsModel.setPoints(points);
     remove(loadingComponent);

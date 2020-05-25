@@ -64,6 +64,7 @@ export default class Points {
 
   resetFilter() {
     if (this._activeFilter === FilterType.EVERYTHING) {
+      this._callHandlers(this._filterChangeHandlers);
       return;
     }
 

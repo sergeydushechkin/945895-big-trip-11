@@ -107,6 +107,10 @@ export default class PointController {
             newPoint
         );
       });
+
+      this._eventEditComponent.setRollupButtonClickHandler(() => {
+        this._replaceEventEditToEvent();
+      });
     }
 
     if (this._mode === Mode.ADDING) {
