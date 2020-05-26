@@ -6,7 +6,16 @@ import LoadingComponent from "./components/loading.js";
 import {RenderPosition, render, remove, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
-import API from "./api.js";
+import API from "./api/index.js";
+import DataStorage from "./data-storage.js";
+import Provider from "./api/provider.js";
+import Store from "./api/store.js";
+
+const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
+const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const onError = (error) => {
   const node = document.createElement(`div`);
@@ -16,10 +25,9 @@ const onError = (error) => {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 
-const AUTHORIZATION = `Basic h12f43D34thDaf43jkd=`;
-const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
-
 const api = new API(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -29,7 +37,7 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 const tripInfoComponent = new TripInfoComponent(pointsModel);
 const menuComponent = new MenuComponent();
 const filterController = new FilterController(tripMainControlsElement.querySelector(`h2:nth-of-type(2)`), pointsModel);
-const tripController = new TripController(tripEventsElement, pointsModel, api);
+const tripController = new TripController(tripEventsElement, pointsModel, apiWithProvider);
 const statsComponent = new StatsComponent(pointsModel);
 const loadingComponent = new LoadingComponent();
 
@@ -59,9 +67,11 @@ menuComponent.setOnClickHandler((menuTab) => {
   }
 });
 
-api.getData()
-  .then((points) => {
-    pointsModel.setPoints(points);
+apiWithProvider.getData()
+  .then(({parsedPoints, destinations, parsedOffers}) => {
+    DataStorage.setDestinations(destinations);
+    DataStorage.setOffers(parsedOffers);
+    pointsModel.setPoints(parsedPoints);
     remove(loadingComponent);
     tripController.render();
   })
@@ -71,3 +81,19 @@ api.getData()
     remove(loadingComponent);
     tripController.render();
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (apiWithProvider.isSyncRequired()) {
+    apiWithProvider.sync();
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

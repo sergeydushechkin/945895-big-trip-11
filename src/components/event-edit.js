@@ -3,7 +3,7 @@ import {formatFullDate, capitalizeFirstLetter} from "../utils/common.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import flatpickr from "flatpickr";
 import {Mode as PointControllerMode} from "../controllers/point.js";
-import Store from "../store.js";
+import DataStorage from "../data-storage.js";
 
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -241,7 +241,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._pointOffers = point.offers;
     this._externalData = DefaultData;
 
-    this._destinations = Store.getDestinations();
+    this._destinations = DataStorage.getDestinations();
 
     this._submitHandler = null;
     this._resetHandler = null;
@@ -356,7 +356,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     element.querySelector(`.event__type-list`).addEventListener(`change`, () => {
       this._pointType = element.querySelector(`.event__type-list .event__type-input:checked`).value;
-      this._pointOffers = Store.getOffers()[this._pointType];
+      this._pointOffers = DataStorage.getOffers()[this._pointType];
       this.rerender();
     });
 

@@ -1,6 +1,5 @@
-import Point from "./models/point.js";
-import Offer from "./models/offer.js";
-import Store from "./store.js";
+import Point from "../models/point.js";
+import Offer from "../models/offer.js";
 
 const Method = {
   GET: `GET`,
@@ -31,11 +30,10 @@ export default class API {
       .then((responses) => Promise.all(responses.map((it) => it.json())))
       .then((responses) => {
         const [points, destinations, offers] = responses;
-        Store.setDestinations(destinations);
-        Store.setOffers(Offer.parseOffers(offers));
-        return points;
-      })
-      .then(Point.parsePoints);
+        const parsedPoints = Point.parsePoints(points);
+        const parsedOffers = Offer.parseOffers(offers);
+        return {parsedPoints, destinations, parsedOffers};
+      });
   }
 
   createPoint(point) {
@@ -65,6 +63,16 @@ export default class API {
       url: `points/${id}`,
       method: Method.DELETE,
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
