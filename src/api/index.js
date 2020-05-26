@@ -1,6 +1,5 @@
 import Point from "../models/point.js";
 import Offer from "../models/offer.js";
-import DataStorage from "../data-storage.js";
 
 const Method = {
   GET: `GET`,
@@ -31,11 +30,10 @@ export default class API {
       .then((responses) => Promise.all(responses.map((it) => it.json())))
       .then((responses) => {
         const [points, destinations, offers] = responses;
-        DataStorage.setDestinations(destinations);
-        DataStorage.setOffers(Offer.parseOffers(offers));
-        return points;
-      })
-      .then(Point.parsePoints);
+        const parsedPoints = Point.parsePoints(points);
+        const parsedOffers = Offer.parseOffers(offers);
+        return {parsedPoints, destinations, parsedOffers};
+      });
   }
 
   createPoint(point) {
