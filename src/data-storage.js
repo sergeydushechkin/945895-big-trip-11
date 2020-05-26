@@ -1,4 +1,4 @@
-export default class Store {
+export default class DataStorage {
   constructor() {
     this._destinations = null;
   }

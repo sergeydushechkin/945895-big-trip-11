@@ -6,7 +6,7 @@ import LoadingComponent from "./components/loading.js";
 import {RenderPosition, render, remove, HIDDEN_CLASS} from "./utils/render.js";
 import TripController from "./controllers/trip.js";
 import PointsModel from "./models/points.js";
-import API from "./api.js";
+import API from "./api/index.js";
 
 const onError = (error) => {
   const node = document.createElement(`div`);
