@@ -19,10 +19,16 @@ const createStoreStructure = (items) => {
   }, {});
 };
 
+const getSyncedPoints = (items) => {
+  return items.filter(({success}) => success)
+    .map(({payload}) => payload.point);
+};
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
+    this._syncRequired = false;
   }
 
   getData() {
@@ -65,6 +71,7 @@ export default class Provider {
 
     this._store.setItem(StorageItemGroup.POINTS, localNewPoint.id, localNewPoint.toRAW());
 
+    this._syncRequired = true;
     return Promise.resolve(localNewPoint);
   }
 
@@ -80,6 +87,7 @@ export default class Provider {
     const localPoint = Point.clone(Object.assign(point, {id}));
     this._store.setItem(StorageItemGroup.POINTS, id, localPoint.toRAW());
 
+    this._syncRequired = true;
     return Promise.resolve(localPoint);
   }
 
@@ -91,6 +99,30 @@ export default class Provider {
 
     this._store.removeItem(StorageItemGroup.POINTS, id);
 
+    this._syncRequired = true;
     return Promise.resolve();
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storePoints = Object.values(this._store.getItems(StorageItemGroup.POINTS));
+
+      return this._api.sync(storePoints)
+        .then((response) => {
+          const createdPoints = response.created;
+          const updatedPoints = getSyncedPoints(response.updated);
+
+          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+
+          this._store.setItems(StorageItemGroup.POINTS, items);
+          this._syncRequired = false;
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
+
+  isSyncRequired() {
+    return this._syncRequired;
   }
 }

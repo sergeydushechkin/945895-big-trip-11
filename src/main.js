@@ -81,3 +81,15 @@ apiWithProvider.getData()
     remove(loadingComponent);
     tripController.render();
   });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (apiWithProvider.isSyncRequired()) {
+    apiWithProvider.sync();
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
