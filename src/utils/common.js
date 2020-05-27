@@ -1,33 +1,29 @@
 import moment from "moment";
 
-export const getRandomArrayElement = (array) =>
-  array[Math.floor(Math.random() * array.length)];
-
-export const getRandomIntegerNumber = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
-
-export const formatTime = (date) => {
+const formatTime = (date) => {
   return moment(date).format(`HH:mm`);
 };
 
-export const formatFullDate = (date) => {
+const formatFullDate = (date) => {
   return moment(date).format(`DD/MM/YYYY HH:mm`);
 };
 
-export const formatDateReverse = (date) => {
+const formatDateReverse = (date) => {
   return moment(date).format(`YYYY-MM-DD`);
 };
 
-export const formatDuration = (dateFirst, dateSecond) => {
+const formatDuration = (dateFirst, dateSecond) => {
   const duration = moment.duration(moment(dateSecond).diff(dateFirst));
-  const days = duration.days();
-  const hours = duration.hours();
+
+  const days = duration.days() ? duration.days() + `D ` : ``;
+  const hours = days || duration.hours() ? duration.hours() + `H ` : ``;
   const minutes = duration.minutes();
 
-  let result = `${days ? days + `D ` : ``}${hours || days ? hours + `H ` : ``}${minutes}M`;
-
-  return result;
+  return `${days}${hours}${minutes}M`;
 };
 
-export const capitalizeFirstLetter = (string) =>
+const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+
+export {formatTime, formatFullDate, formatDateReverse, formatDuration, capitalizeFirstLetter};

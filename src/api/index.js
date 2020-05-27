@@ -10,6 +10,8 @@ const Method = {
 
 const URLS = [`points`, `destinations`, `offers`];
 
+const DEFAULT_HEADER = {"Content-Type": `application/json`};
+
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -30,8 +32,8 @@ export default class API {
       .then((responses) => Promise.all(responses.map((it) => it.json())))
       .then((responses) => {
         const [points, destinations, offers] = responses;
-        const parsedPoints = Point.parsePoints(points);
-        const parsedOffers = Offer.parseOffers(offers);
+        const parsedPoints = Point.parseAll(points);
+        const parsedOffers = Offer.parse(offers);
         return {parsedPoints, destinations, parsedOffers};
       });
   }
@@ -41,10 +43,10 @@ export default class API {
       url: `points`,
       method: Method.POST,
       body: JSON.stringify(point.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`})
+      headers: new Headers(DEFAULT_HEADER)
     })
       .then((response) => response.json())
-      .then(Point.parsePoint);
+      .then(Point.parse);
   }
 
   updatePoint(id, data) {
@@ -52,10 +54,10 @@ export default class API {
       url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`})
+      headers: new Headers(DEFAULT_HEADER)
     })
       .then((response) => response.json())
-      .then(Point.parsePoint);
+      .then(Point.parse);
   }
 
   deletePoint(id) {
@@ -70,7 +72,7 @@ export default class API {
       url: `points/sync`,
       method: Method.POST,
       body: JSON.stringify(data),
-      headers: new Headers({"Content-Type": `application/json`})
+      headers: new Headers(DEFAULT_HEADER)
     })
       .then((response) => response.json());
   }

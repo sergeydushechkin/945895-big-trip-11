@@ -19,8 +19,8 @@ export default class FilterController {
   }
 
   render() {
-    const futureStatus = getFilteredPoints(this._pointsModel.getPointsAll(), FilterType.FUTURE).length !== 0;
-    const pastStatus = getFilteredPoints(this._pointsModel.getPointsAll(), FilterType.PAST).length !== 0;
+    const futureStatus = getFilteredPoints(this._pointsModel.getAll(), FilterType.FUTURE).length !== 0;
+    const pastStatus = getFilteredPoints(this._pointsModel.getAll(), FilterType.PAST).length !== 0;
 
     const oldFilterComponent = this._filterComponent;
     this._filterComponent = new FilterComponent(futureStatus, pastStatus);

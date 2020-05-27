@@ -1,21 +1,21 @@
 import EventComponent from "../components/event.js";
 import EventEditComponent, {EVENT_DATE_FORMAT, OFFER_NAME_PREFIX} from "../components/event-edit.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
-import {EVENT_TYPES} from "../const.js";
 import DataStorage from "../data-storage.js";
 import PointModel from "../models/point.js";
 
 import flatpickr from "flatpickr";
 
+const EVENT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export const Mode = {
+const Mode = {
   ADDING: `adding`,
   EDIT: `edit`,
   DEFAULT: `default`
 };
 
-export const EmptyPoint = {
+const EmptyPoint = {
   type: EVENT_TYPES[0],
   destination: ``,
   dateStart: Date.now(),
@@ -204,3 +204,5 @@ export default class PointController {
     }
   }
 }
+
+export {Mode, EmptyPoint};

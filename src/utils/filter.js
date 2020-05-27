@@ -8,7 +8,7 @@ const getPastPoints = (points, date) => {
   return points.filter((point) => point.dateStart < date);
 };
 
-export const getFilteredPoints = (points, filterType) => {
+const getFilteredPoints = (points, filterType) => {
   const date = Date.now();
 
   switch (filterType) {
@@ -20,3 +20,5 @@ export const getFilteredPoints = (points, filterType) => {
 
   return points;
 };
+
+export {getFilteredPoints};

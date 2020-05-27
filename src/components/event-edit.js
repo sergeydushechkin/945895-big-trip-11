@@ -7,8 +7,8 @@ import DataStorage from "../data-storage.js";
 
 import "flatpickr/dist/flatpickr.min.css";
 
-export const EVENT_DATE_FORMAT = `d/m/y H:i`;
-export const OFFER_NAME_PREFIX = `event-offer-`;
+const EVENT_DATE_FORMAT = `d/m/y H:i`;
+const OFFER_NAME_PREFIX = `event-offer-`;
 
 const DefaultData = {
   deleteButtonText: `Delete`,
@@ -218,9 +218,7 @@ const createEventEditTemplate = (point, mode, options, destinations) => {
 };
 
 const validateDestination = (destintationElement, destinations) => {
-  const isExist = destinations.findIndex((it) => it.name === destintationElement.value) === -1
-    ? false
-    : true;
+  const isExist = destinations.findIndex((it) => it.name === destintationElement.value) !== -1;
   if (isExist) {
     destintationElement.setCustomValidity(``);
     return true;
@@ -418,3 +416,5 @@ export default class EventEdit extends AbstractSmartComponent {
       : this.getElement().querySelector(`form.event--edit`);
   }
 }
+
+export {EVENT_DATE_FORMAT, OFFER_NAME_PREFIX};

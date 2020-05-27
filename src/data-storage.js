@@ -1,6 +1,7 @@
 export default class DataStorage {
   constructor() {
     this._destinations = null;
+    this._offers = null;
   }
 
   static setDestinations(data) {

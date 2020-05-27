@@ -16,6 +16,7 @@ const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 const STORE_PREFIX = `big-trip-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const OFFLINE_TITLE = ` [offline]`;
 
 const onError = (error) => {
   const node = document.createElement(`div`);
@@ -53,7 +54,7 @@ render(tripEventsElement, loadingComponent, RenderPosition.BEFOREEND);
 filterController.render();
 statsComponent.hide();
 
-menuComponent.setOnClickHandler((menuTab) => {
+menuComponent.setClickHandler((menuTab) => {
   switch (menuTab) {
     case MenuTab.TABLE:
       tripEventsElement.classList.remove(HIDDEN_CLASS);
@@ -87,7 +88,7 @@ window.addEventListener(`load`, () => {
 });
 
 window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
+  document.title = document.title.replace(OFFLINE_TITLE, ``);
 
   if (apiWithProvider.isSyncRequired()) {
     apiWithProvider.sync();
@@ -95,5 +96,5 @@ window.addEventListener(`online`, () => {
 });
 
 window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
+  document.title += OFFLINE_TITLE;
 });
