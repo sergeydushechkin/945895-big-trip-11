@@ -72,13 +72,13 @@ apiWithProvider.getData()
   .then(({parsedPoints, destinations, parsedOffers}) => {
     DataStorage.setDestinations(destinations);
     DataStorage.setOffers(parsedOffers);
-    pointsModel.setPoints(parsedPoints);
+    pointsModel.set(parsedPoints);
     remove(loadingComponent);
     tripController.render();
   })
   .catch((error) => {
     onError(error);
-    pointsModel.setPoints([]);
+    pointsModel.set([]);
     remove(loadingComponent);
     tripController.render();
   });
