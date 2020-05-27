@@ -1,6 +1,4 @@
-export const EVENT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
-
-export const EVENT_PREP = {
+const EVENT_PREP = {
   [`taxi`]: `to`,
   [`bus`]: `to`,
   [`train`]: `to`,
@@ -13,13 +11,7 @@ export const EVENT_PREP = {
   [`restaurant`]: `in`
 };
 
-export const FilterType = {
-  EVERYTHING: `everything`,
-  FUTURE: `future`,
-  PAST: `past`
-};
-
-export const MONTH_NAMES = [
+const MONTH_NAMES = [
   `Jan`,
   `Feb`,
   `Mar`,
@@ -33,3 +25,11 @@ export const MONTH_NAMES = [
   `Nov`,
   `Dec`
 ];
+
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
+};
+
+export {EVENT_PREP, MONTH_NAMES, FilterType};

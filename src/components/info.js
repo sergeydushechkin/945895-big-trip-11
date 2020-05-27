@@ -70,7 +70,7 @@ export default class Info extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._pointsModel.getPointsAll());
+    return createTripInfoTemplate(this._pointsModel.getAll());
   }
 
   recoveryListeners() {}

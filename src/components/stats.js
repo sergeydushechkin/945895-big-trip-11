@@ -5,7 +5,7 @@ import moment from "moment";
 
 const BAR_HEIGHT = 55;
 
-export const TRANSPORT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+const TRANSPORT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
 
 const getUniqueTypes = (points) => {
   return Array.from(new Set(points.map((point) => point.type)));
@@ -296,12 +296,12 @@ export default class StatsComponents extends AbstractSmartComponent {
     const timeSpendCtx = element.querySelector(`.statistics__chart--time`);
 
     moneyCtx.height = BAR_HEIGHT * 6;
-    transportCtx.height = BAR_HEIGHT * 4;
+    transportCtx.height = BAR_HEIGHT * 6;
     timeSpendCtx.height = BAR_HEIGHT * 6;
 
-    this._moneyChart = renderMoneyChart(this._pointsModel.getPointsAll(), moneyCtx);
-    this._transportChart = renderTransportChart(this._pointsModel.getPointsAll(), transportCtx);
-    this._timeSpentChart = renderTimeSpendChart(this._pointsModel.getPointsAll(), timeSpendCtx);
+    this._moneyChart = renderMoneyChart(this._pointsModel.getAll(), moneyCtx);
+    this._transportChart = renderTransportChart(this._pointsModel.getAll(), transportCtx);
+    this._timeSpentChart = renderTimeSpendChart(this._pointsModel.getAll(), timeSpendCtx);
   }
 
   _resetCharts() {

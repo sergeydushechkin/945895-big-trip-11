@@ -23,12 +23,12 @@ export default class Point {
     };
   }
 
-  static parsePoint(data) {
+  static parse(data) {
     return new Point(data);
   }
 
-  static parsePoints(data) {
-    return data.map(Point.parsePoint);
+  static parseAll(data) {
+    return data.map(Point.parse);
   }
 
   static clone(data) {

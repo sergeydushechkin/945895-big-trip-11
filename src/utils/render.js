@@ -1,19 +1,19 @@
-export const RenderPosition = {
+const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
   BEFOREBEGIN: `beforebegin`,
   AFTEREND: `afterend`
 };
 
-export const HIDDEN_CLASS = `trip-events--hidden`;
+const HIDDEN_CLASS = `trip-events--hidden`;
 
-export const createElement = (elementTemplate) => {
+const createElement = (elementTemplate) => {
   const tempElement = document.createElement(`div`);
   tempElement.innerHTML = elementTemplate;
   return tempElement.firstChild;
 };
 
-export const render = (container, element, place) => {
+const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element.getElement());
@@ -30,7 +30,7 @@ export const render = (container, element, place) => {
   }
 };
 
-export const replace = (newComponent, oldComponent) => {
+const replace = (newComponent, oldComponent) => {
   const container = oldComponent.getElement().parentElement;
   const newElement = newComponent.getElement();
   const oldElement = oldComponent.getElement();
@@ -42,8 +42,9 @@ export const replace = (newComponent, oldComponent) => {
   }
 };
 
-export const remove = (component) => {
+const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
 
+export {RenderPosition, HIDDEN_CLASS, createElement, render, replace, remove};

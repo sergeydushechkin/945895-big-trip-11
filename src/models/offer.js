@@ -4,12 +4,14 @@ export default class Offer {
       return Object.assign(
           {},
           acc,
-          {[`${offer.type}`]: offer.offers}
+          {
+            [offer.type]: offer.offers
+          }
       );
     }, {});
   }
 
-  static parseOffers(data) {
+  static parse(data) {
     return new Offer(data);
   }
 }

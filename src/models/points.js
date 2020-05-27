@@ -11,26 +11,26 @@ export default class Points {
     this._filterResetHandler = null;
   }
 
-  getPoints() {
+  get() {
     return getFilteredPoints(this._points, this._activeFilter);
   }
 
-  getPointsAll() {
+  getAll() {
     return this._points;
   }
 
-  setPoints(points) {
+  set(points) {
     this._points = points;
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  addPoint(data) {
+  add(data) {
     this._points.push(data);
 
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  updatePoint(id, newData) {
+  update(id, newData) {
     const pointIndex = this._findPointIndex(id);
 
     if (pointIndex === -1) {
@@ -43,7 +43,7 @@ export default class Points {
     return true;
   }
 
-  removePoint(id) {
+  remove(id) {
     const pointIndex = this._findPointIndex(id);
 
     if (pointIndex === -1) {
