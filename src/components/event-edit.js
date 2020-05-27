@@ -39,11 +39,11 @@ const createEventEditDestinationsMarkup = (destination) => {
   );
 };
 
-const createEventEditOffersMarkup = (pointOffers, offers) => {
+const createEventEditOffersMarkup = (selectedOffers, offers) => {
   return offers.map((offer) => {
     const {title, price} = offer;
     const type = title.replace(/\s+/g, ``);
-    const status = pointOffers.findIndex((it) => it.title === title) !== -1 ? `checked` : ``;
+    const status = selectedOffers.findIndex((it) => it.title === title) !== -1 ? `checked` : ``;
     return (
       `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="${OFFER_NAME_PREFIX}${type}" ${status}>
@@ -58,8 +58,8 @@ const createEventEditOffersMarkup = (pointOffers, offers) => {
   .join(`\n`);
 };
 
-const createEventEditDetailsMarkup = (pointOffers, offers, destination) => {
-  const eventOffersMarkup = createEventEditOffersMarkup(pointOffers, offers);
+const createEventEditDetailsMarkup = (selectedOffers, offers, destination) => {
+  const eventOffersMarkup = createEventEditOffersMarkup(selectedOffers, offers);
   const eventDestinationsMarkup = destination ? createEventEditDestinationsMarkup(destination) : ``;
   return (
     `<section class="event__details">
@@ -82,7 +82,7 @@ const createdestinationsListMarkup = (destinations) => {
 
 const createEventEditTemplate = (point, mode, options, destinations) => {
   const {dateStart, dateEnd, price, isFavorite} = point;
-  const {type, destination, offers, externalData} = options;
+  const {type, destination, offers, selectedOffers, externalData} = options;
 
   const eventTypeName = capitalizeFirstLetter(type);
   const eventDateStart = formatFullDate(new Date(dateStart));
@@ -91,7 +91,7 @@ const createEventEditTemplate = (point, mode, options, destinations) => {
   const favorite = isFavorite ? `checked` : ``;
 
   const eventDetailsMarkup = typeof destination === `object`
-    ? createEventEditDetailsMarkup(point.offers, offers, destination)
+    ? createEventEditDetailsMarkup(selectedOffers, offers, destination)
     : ``;
 
   return (
@@ -237,6 +237,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._pointType = point.type;
     this._pointDestination = point.destination;
     this._pointOffers = point.offers;
+    this._selectedOffers = point.offers;
     this._externalData = DefaultData;
 
     this._destinations = DataStorage.getDestinations();
@@ -264,6 +265,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._pointType = this._point.type;
     this._pointDestination = this._point.destination;
     this._pointOffers = this._point.offers;
+    this._selectedOffers = this._point.offers;
     this.rerender();
   }
 
@@ -301,7 +303,7 @@ export default class EventEdit extends AbstractSmartComponent {
     return createEventEditTemplate(
         this._point,
         this._mode,
-        {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers, externalData: this._externalData},
+        {type: this._pointType, destination: this._pointDestination, offers: this._pointOffers, selectedOffers: this._selectedOffers, externalData: this._externalData},
         this._destinations
     );
   }
@@ -355,6 +357,7 @@ export default class EventEdit extends AbstractSmartComponent {
     element.querySelector(`.event__type-list`).addEventListener(`change`, () => {
       this._pointType = element.querySelector(`.event__type-list .event__type-input:checked`).value;
       this._pointOffers = DataStorage.getOffers()[this._pointType];
+      this._selectedOffers = [];
       this.rerender();
     });
 
