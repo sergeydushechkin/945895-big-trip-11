@@ -27,7 +27,7 @@ const EmptyPoint = {
 
 const parseFormData = (formData) => {
   const type = formData.get(`event-type`);
-  let offers = [];
+  const offers = [];
 
   DataStorage.getOffers()[type].forEach((offer) => {
     const offerTitle = offer.title.replace(/\s+/g, ``);

@@ -9,7 +9,7 @@ import PointController, {EmptyPoint, Mode as PointControllerMode} from "./point.
 const addButtonElement = document.querySelector(`button.trip-main__event-add-btn`);
 
 const renderEvents = (daysListComponent, points, isDefaultSorting, onDataChange, onViewChange) => {
-  let pointControllers = [];
+  const pointControllers = [];
   const dates = isDefaultSorting
     ? Array.from(new Set(points.map((point) => formatDateReverse(new Date(point.dateStart)))))
     : [true];
