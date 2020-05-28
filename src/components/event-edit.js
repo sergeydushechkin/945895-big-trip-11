@@ -379,7 +379,7 @@ export default class EventEdit extends AbstractSmartComponent {
       enableTime: true,
       dateFormat: EVENT_DATE_FORMAT,
       allowInput: false,
-      time_24hr: true // eslint-disable-line
+      [`time_24hr`]: true
     };
 
     this._flatpickrStartTime = flatpickr(eventStartTimeElement, Object.assign({}, flatpickrOptions, {
