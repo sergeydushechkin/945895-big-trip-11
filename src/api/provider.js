@@ -50,7 +50,7 @@ export default class Provider {
     const storeOffers = this._store.getItems(StorageItemGroup.OFFERS);
 
     return Promise.resolve({
-      parsedPoints: Point.parsePoints(storePoints),
+      parsedPoints: Point.parseAll(storePoints),
       destinations: storeDestinations,
       parsedOffers: storeOffers
     });
