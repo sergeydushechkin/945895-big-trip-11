@@ -12,7 +12,7 @@
   "devDependencies": {
     "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.7.0",
-    "css-loader": "3.5.3",
+    "css-loader": "6.7.3",
     "eslint": "6.1.0",
     "eslint-config-htmlacademy": "0.5.2",
     "flatpickr": "4.6.3",
@@ -21,8 +21,8 @@
     "nanoid": "3.1.9",
     "style-loader": "1.2.1",
     "stylelint-config-htmlacademy": "0.1.4",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11",
+    "webpack": "5.75.0",
+    "webpack-cli": "5.0.1",
     "webpack-dev-server": "3.10.3"
   },
   "engines": {
